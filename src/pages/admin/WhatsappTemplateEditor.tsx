@@ -81,22 +81,6 @@ const templateInfo = {
       { name: "{{cancellationLink}}", desc: "Enlace para cancelar todas o algunas citas" },
     ],
   },
-  reminder: {
-    title: "Recordatorio de Cita",
-    description: "Mensaje de recordatorio enviado antes de la cita (soporta singular y plural)",
-    variables: [
-      { name: "{{names}}", desc: "Nombre del cliente" },
-      { name: "{{count}}", desc: "Número de citas (1, 2, 3...)" },
-      { name: "{{cita_pal}}", desc: "'cita' o 'citas' (automático)" },
-      { name: "{{agendada_pal}}", desc: "'agendada' o 'agendadas' (automático)" },
-      { name: "{{date_range}}", desc: "Fecha o rango de fechas" },
-      { name: "{{organization}}", desc: "Nombre del negocio" },
-      { name: "{{address}}", desc: "Dirección del negocio" },
-      { name: "{{services_list}}", desc: "Lista de servicios" },
-      { name: "{{employee}}", desc: "Nombre del empleado o empleados" },
-      { name: "{{manage_block}}", desc: "Enlace para confirmar o cancelar la cita" },
-    ],
-  },
   statusReservationApproved: {
     title: "Reserva Aprobada",
     description: "Mensaje cuando una reserva es aprobada",
@@ -185,7 +169,6 @@ export default function WhatsappTemplateEditor() {
     scheduleAppointment: true,
     scheduleAppointmentBatch: true,
     recurringAppointmentSeries: true,
-    reminder: true,
     statusReservationApproved: false,
     statusReservationRejected: false,
     clientConfirmationAck: true,
@@ -309,7 +292,6 @@ export default function WhatsappTemplateEditor() {
         scheduleAppointment: templateSettings.scheduleAppointment,
         scheduleAppointmentBatch: templateSettings.scheduleAppointmentBatch,
         recurringAppointmentSeries: templateSettings.recurringAppointmentSeries,
-        reminder: templateSettings.reminder,
         statusReservationApproved: templateSettings.statusReservationApproved,
         statusReservationRejected: templateSettings.statusReservationRejected,
         clientConfirmationAck: templateSettings.clientConfirmationAck,
@@ -695,21 +677,6 @@ export default function WhatsappTemplateEditor() {
                       />
                     </Group>
                   </Paper>
-
-                  {/* Recordatorio (Siempre activo) */}
-                  <Alert icon={<IconAlertCircle size={20} />} color="green" radius="md">
-                    <Group justify="space-between">
-                      <Box>
-                        <Text fw={600}>Recordatorio de Citas</Text>
-                        <Text size="sm" c="dimmed">
-                          Siempre activo - se envía automáticamente 24h antes de cada cita
-                        </Text>
-                      </Box>
-                      <Badge color="green" variant="filled">
-                        Siempre Activo
-                      </Badge>
-                    </Group>
-                  </Alert>
 
                   {/* Agradecimiento por Confirmación */}
                   <Paper withBorder p="md" radius="md">

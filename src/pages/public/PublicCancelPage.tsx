@@ -49,7 +49,6 @@ export const PublicCancelPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const token = searchParams.get("token");
-  const source = searchParams.get("source") || "confirmation"; // 'confirmation' o 'reminder'
 
   const [loading, setLoading] = useState(true);
   const [info, setInfo] = useState<CancellationInfo | null>(null);
@@ -488,37 +487,9 @@ export const PublicCancelPage: React.FC = () => {
 
               <Stack gap="md" style={{ 
                 display: "grid",
-                gridTemplateColumns: source === "reminder" ? "repeat(auto-fit, minmax(min(100%, 250px), 1fr))" : "1fr",
+                gridTemplateColumns: "1fr",
                 gap: "1rem"
               }}>
-                {/* Botón de confirmar solo visible en recordatorios */}
-                {source === "reminder" && (
-                  <Card
-                    padding="lg"
-                    radius="md"
-                    withBorder
-                    style={{
-                      cursor: "pointer",
-                      transition: "all 0.2s ease",
-                      border: "2px solid var(--mantine-color-green-3)",
-                      backgroundColor: "var(--mantine-color-green-0)",
-                    }}
-                    onClick={handleConfirm}
-                    className="hover-lift"
-                  >
-                    <Stack align="center" gap="md">
-                      <MdCheckCircle size={40} color="var(--mantine-color-green-6)" style={{ fontSize: "clamp(40px, 8vw, 48px)" }} />
-                      <Stack gap={4} align="center">
-                        <Title order={4} ta="center">
-                            Confirmar mi Asistencia
-                          </Title>
-                        <Text size="sm" c="dimmed" ta="center">
-                          Avísale al establecimiento que sí asistirás
-                        </Text>
-                      </Stack>
-                    </Stack>
-                  </Card>
-                )}
 
                 <Card
                   padding="lg"

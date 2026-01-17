@@ -10,16 +10,13 @@ import AdminServices from "../pages/admin/manageServices";
 import AdminEmployees from "../pages/admin/manageEmployees";
 import OrganizationInfo from "../pages/admin/OrganizationInfo/index";
 import EmployeeInfo from "../pages/account/EmployeeInfo";
-import DailyCashbox from "../pages/account/DailyCashbox";
 // import Booking from "../pages/onlineReservation/Booking";
-import ReservationsList from "../pages/admin/manageReservation";
 import Home from "../pages/Home";
 import Location from "../pages/location/location";
 import WhatsappMultiSession from "../pages/admin/manageWhatsapp";
 import SuperadminManagement from "../pages/superadmin/SuperadminManagement";
 
 import MyMembership from "../pages/admin/MyMembership";
-import MultiBookingWizard from "../pages/onlineReservationMulti";
 import AdminAnalyticsDashboard from "../pages/admin/analyticsDashboard";
 import PublicCancelPage from "../pages/public/PublicCancelPage";
 import WhatsappTemplateEditor from "../pages/admin/WhatsappTemplateEditor";
@@ -87,23 +84,6 @@ const generalRoutes = [
       description: "Consulta nuestros  en Galaxia Glamour.",
     },
   },
-  // {
-  //   path: "/online-reservation",
-  //   component: Booking,
-  //   MediaMetadata: {
-  //     title: "Reserva en linea",
-  //     description: "Reserva con nosotros rápido y facíl.",
-  //   },
-  // },
-
-    {
-    path: "/online-reservation",
-    component: MultiBookingWizard,
-    MediaMetadata: {
-      title: "Reserva en linea",
-      description: "Reserva con nosotros rápido y facíl.",
-    },
-  },
   {
     path: "/location",
     component: Location,
@@ -145,18 +125,6 @@ const generalRoutes = [
     },
   },
   {
-    path: "/gestionar-reservas-online",
-    component: (props: JSX.IntrinsicAttributes) => (
-      <ProtectedRoute>
-        <ReservationsList {...props} />
-      </ProtectedRoute>
-    ),
-    MediaMetadata: {
-      title: "Gestionar Reservas Online",
-      description: "Gestiona las reservas de Galaxia Glamour.",
-    },
-  },
-  {
     path: "/gestionar-servicios",
     component: (props: JSX.IntrinsicAttributes) => (
       <ProtectedRoute>
@@ -193,14 +161,6 @@ const generalRoutes = [
     component: (props: JSX.IntrinsicAttributes) => (
       <ProtectedRoute>
         <EmployeeInfo {...props} />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/gestion-caja",
-    component: (props: JSX.IntrinsicAttributes) => (
-      <ProtectedRoute>
-        <DailyCashbox {...props} />
       </ProtectedRoute>
     ),
   },

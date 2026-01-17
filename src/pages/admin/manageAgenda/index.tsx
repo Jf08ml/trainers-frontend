@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {
   useEffect,
@@ -36,7 +35,6 @@ import { usePermissions } from "../../../hooks/usePermissions";
 import { CustomLoader } from "../../../components/customLoader/CustomLoader";
 import { endOfDay, endOfMonth, startOfDay, startOfMonth } from "date-fns";
 import { useNavigate } from "react-router-dom";
-import { sendOrgReminders } from "../../../services/reminderService";
 
 import { useWhatsappStatus } from "../../../hooks/useWhatsappStatus";
 import WhatsappStatusIcon from "./components/WhatsappStatusIcon";
@@ -84,10 +82,7 @@ const ScheduleView: React.FC = () => {
   const [showSearchModal, setShowSearchModal] = useState(false);
   const [reorderModalOpened, setReorderModalOpened] = useState(false);
 
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [sendingReminders, setSendingReminders] = useState(false);
-
-  const [reminderDate, setReminderDate] = useState<Date | null>(null);
+  const [currentDate, setCurrentDate] = useState(new Date);
 
   // Identificador del usuario actual, con su "empleado" asociado
   const userId = useSelector((state: RootState) => state.auth.userId as string);
@@ -149,91 +144,6 @@ const ScheduleView: React.FC = () => {
   }, [newAppointment.employee, employees]);
 
   const isWhatsAppReady = code === "ready";
-
-  // ---------- Envío de recordatorios (campaña bulk) ----------
-  const handleSendDailyReminders = () => {
-    if (sendingReminders) return;
-
-    if (!reminderDate) {
-      showNotification({
-        title: "Selecciona una fecha",
-        message:
-          "Debes elegir el día para el que quieres enviar los recordatorios.",
-        color: "orange",
-        autoClose: 3000,
-        position: "top-right",
-      });
-      return;
-    }
-
-    const dateLabel = reminderDate.toLocaleDateString("es-CO", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-
-    openConfirmModal({
-      title: "Enviar recordatorios",
-      centered: true,
-      children: (
-        <p>
-          Se enviarán mensajes a los{" "}
-          <strong>clientes con citas el día {dateLabel}</strong> que{" "}
-          <strong>aún no tienen recordatorio</strong>. ¿Deseas continuar?
-        </p>
-      ),
-      labels: { confirm: "Sí, enviar", cancel: "Cancelar" },
-      confirmProps: { color: "grape" },
-      onConfirm: async () => {
-        if (sendingReminders) return;
-        setSendingReminders(true);
-        try {
-          if (!isWhatsAppReady) {
-            showNotification({
-              title: "WhatsApp no está listo",
-              message: reason || "La sesión no está en estado 'ready'.",
-              color: "orange",
-              autoClose: 3500,
-              position: "top-right",
-            });
-            return;
-          }
-
-          const r = await sendOrgReminders(organizationId as string, {
-            dryRun: false,
-            targetDate: reminderDate.toISOString(), // o .toISOString().slice(0, 10)
-          });
-
-          const results = r?.results ?? r?.data?.results ?? [];
-          const prepared = results.reduce(
-            (sum: number, it: { prepared: any }) =>
-              sum + Number(it?.prepared ?? 0),
-            0
-          );
-
-          showNotification({
-            title: "Campaña creada",
-            message: `Se prepararon ${prepared} mensajes para enviar.`,
-            color: "green",
-            autoClose: 3500,
-            position: "top-right",
-          });
-        } catch (error) {
-          showNotification({
-            title: "Error",
-            message: "No se pudieron enviar los recordatorios.",
-            color: "red",
-            autoClose: 3000,
-            position: "top-right",
-          });
-          console.error(error);
-        } finally {
-          setSendingReminders(false);
-        }
-      },
-    });
-  };
 
   // ---------- DATA: Clientes/Empleados/Citas ----------
   const fetchClients = useCallback(async () => {
@@ -692,10 +602,6 @@ const ScheduleView: React.FC = () => {
 
   return (
     <Box pos="relative" p="md">
-      {sendingReminders && (
-        <CustomLoader loadingText="Enviando recordatorios.." overlay />
-      )}
-
       {/* Barra superior tipo toolbar */}
       <Paper
         withBorder
@@ -737,18 +643,13 @@ const ScheduleView: React.FC = () => {
             onReloadMonth={() => fetchAppointmentsForMonth(currentDate)}
             onAddAppointment={() => openModal(new Date(), new Date())}
             onReorderEmployees={() => setReorderModalOpened(true)}
-            onSendReminders={handleSendDailyReminders}
             isWhatsappReady={isWhatsAppReady}
-            sendingReminders={sendingReminders}
             reasonForDisabled={reason}
             canSearchAppointments={hasPermission(
               "appointments:search_schedule"
             )}
             canCreate={hasPermission("appointments:create")}
-            canSendReminders={hasPermission("appointments:send_reminders")}
             canReorderEmployees={hasPermission("appointments:reorderemployees")}
-            reminderDate={reminderDate}
-            onChangeReminderDate={setReminderDate}
           />
         </Group>
       </Paper>

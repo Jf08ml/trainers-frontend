@@ -29,7 +29,6 @@ import ContactTab from "./components/tabs/ContactTab";
 import OpeningHoursTab from "./components/tabs/OpeningHoursTab";
 import SocialMediaTab from "./components/tabs/SocialMediaTab";
 import LocationTab from "./components/tabs/LocationTab";
-import FidelityTab from "./components/tabs/FidelityTab";
 import BrandingTab from "./components/tabs/BrandingTab";
 import PaymentMethodsTab from "./components/tabs/PaymentMethodsTab";
 
@@ -84,12 +83,6 @@ export default function OrganizationInfo() {
             paymentMethods: ensureArray(response.paymentMethods, []),
             requireReservationDeposit: response.requireReservationDeposit ?? false,
             reservationDepositPercentage: response.reservationDepositPercentage ?? 50,
-            reminderSettings: {
-              enabled: response.reminderSettings?.enabled ?? true,
-              hoursBefore: response.reminderSettings?.hoursBefore ?? 24,
-              sendTimeStart: response.reminderSettings?.sendTimeStart ?? "07:00",
-              sendTimeEnd: response.reminderSettings?.sendTimeEnd ?? "20:00",
-            },
             openingHours: {
               start: response.openingHours?.start ?? "",
               end: response.openingHours?.end ?? "",
@@ -315,14 +308,6 @@ export default function OrganizationInfo() {
             Ubicación
           </Tabs.Tab>
           <Tabs.Tab
-            value="fidelity"
-            leftSection={
-              <GrOrganization style={{ width: rem(12), height: rem(12) }} />
-            }
-          >
-            Fidelidad
-          </Tabs.Tab>
-          <Tabs.Tab
             value="branding"
             leftSection={
               <MdBrandingWatermark
@@ -362,10 +347,6 @@ export default function OrganizationInfo() {
 
         <Tabs.Panel value="location" pt="md">
           <LocationTab form={form} isEditing={isEditing} />
-        </Tabs.Panel>
-
-        <Tabs.Panel value="fidelity" pt="md">
-          <FidelityTab form={form} isEditing={isEditing} />
         </Tabs.Panel>
 
         <Tabs.Panel value="branding" pt="md">

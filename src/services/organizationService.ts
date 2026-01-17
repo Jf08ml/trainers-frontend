@@ -29,13 +29,6 @@ export interface Branding {
   manifest?: object;
 }
 
-export interface ReminderSettings {
-  enabled?: boolean;
-  hoursBefore?: number;
-  sendTimeStart?: string;
-  sendTimeEnd?: string;
-}
-
 export interface PaymentMethod {
   type: "nequi" | "bancolombia" | "daviplata" | "otros";
   accountName?: string;
@@ -96,7 +89,6 @@ export interface Organization {
   welcomeTitle?: string;
   welcomeDescription?: string;
   homeLayout?: "modern" | "minimal" | "cards";
-  reminderSettings?: ReminderSettings;
   currency?: string;
   // Sistema de membresías
   currentMembershipId?: string;

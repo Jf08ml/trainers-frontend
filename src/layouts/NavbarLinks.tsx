@@ -11,9 +11,9 @@ import {
 } from "@mantine/core";
 import { MdOutlineLoyalty } from "react-icons/md";
 import { GrUserSettings } from "react-icons/gr";
-import { BiCalendar, BiCalendarCheck } from "react-icons/bi";
+import {  BiCalendarCheck } from "react-icons/bi";
 import { GiClawSlashes, GiPriceTag } from "react-icons/gi";
-import { FaCashRegister, FaIdeal, FaUsers, FaWhatsapp } from "react-icons/fa";
+import {  FaUsers, FaWhatsapp } from "react-icons/fa";
 import { IoAnalytics } from "react-icons/io5";
 import { FaCrown } from "react-icons/fa";
 import { BsChatText } from "react-icons/bs";
@@ -81,18 +81,6 @@ export default function NavbarLinks({ closeNavbar }: NavbarLinksProps) {
           icon: <GiPriceTag size={18} />,
           canShow: true,
         },
-        {
-          label: "Plan de fidelidad",
-          to: "/search-client",
-          icon: <FaIdeal size={18} />,
-          canShow: organization?.showLoyaltyProgram ?? true,
-        },
-        {
-          label: "Reserva en línea",
-          to: "/online-reservation",
-          icon: <BiCalendar size={18} />,
-          canShow: true,
-        },
       ],
     },
     {
@@ -102,22 +90,10 @@ export default function NavbarLinks({ closeNavbar }: NavbarLinksProps) {
           : undefined,
       items: [
         {
-          label: "Gestión de caja",
-          to: "/gestion-caja",
-          icon: <FaCashRegister size={18} />,
-          canShow: can.cashRead,
-        },
-        {
           label: "Gestionar agenda",
           to: "/gestionar-agenda",
           icon: <BiCalendarCheck size={18} />,
           canShow: can.apptsAll || can.apptsOwn,
-        },
-        {
-          label: "Gestionar reservas online",
-          to: "/gestionar-reservas-online",
-          icon: <FaUsers size={18} />,
-          canShow: can.onlineRes,
         },
         {
           label: "Información del negocio",

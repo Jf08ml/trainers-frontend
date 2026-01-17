@@ -10,7 +10,6 @@ export interface WhatsappTemplates {
   scheduleAppointment: WhatsappTemplate;
   scheduleAppointmentBatch: WhatsappTemplate;
   recurringAppointmentSeries: WhatsappTemplate;
-  reminder: WhatsappTemplate;
   statusReservationApproved: WhatsappTemplate;
   statusReservationRejected: WhatsappTemplate;
   clientConfirmationAck: WhatsappTemplate;
@@ -23,7 +22,6 @@ export interface TemplatesResponse {
     scheduleAppointment: string;
     scheduleAppointmentBatch: string;
     recurringAppointmentSeries: string;
-    reminder: string;
     statusReservationApproved: string;
     statusReservationRejected: string;
     clientConfirmationAck: string;
@@ -35,7 +33,6 @@ export interface WhatsappTemplateSettings {
   scheduleAppointment?: boolean;
   scheduleAppointmentBatch?: boolean;
   recurringAppointmentSeries?: boolean;
-  reminder?: boolean;
   statusReservationApproved?: boolean;
   statusReservationRejected?: boolean;
   clientConfirmationAck?: boolean;
