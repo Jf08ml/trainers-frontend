@@ -11,7 +11,6 @@ export interface Employee {
   _id: string;
   names: string;
   position: string;
-  services?: Service[];
   email: string;
   password?: string;
   phoneNumber: string;
@@ -30,7 +29,6 @@ interface CreateEmployeePayload {
   position: string;
   email: string;
   phoneNumber: string;
-  services?: Partial<Service>[];
   organizationId: string;
   password: string;
   isActive: boolean;

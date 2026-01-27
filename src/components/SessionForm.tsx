@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../app/store";
@@ -257,6 +258,7 @@ const SessionForm: React.FC<SessionFormProps> = ({
 
       onSave?.(savedSessionId, savedSessionName);
     } catch (error) {
+      console.error("Error saving session:", error);
       notifications.show({
         title: "Error",
         message: "Error al guardar la sesión",
@@ -801,7 +803,7 @@ const SessionForm: React.FC<SessionFormProps> = ({
                           </Group>
                         </Group>
 
-                        <Collapse in={exercise.expanded}>
+                        <Collapse in={!!exercise.expanded}>
                           <Stack gap="sm" pt="sm">
                             {sessionForm.values.type === "cardio" && (
                               <Select

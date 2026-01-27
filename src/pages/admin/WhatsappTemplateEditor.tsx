@@ -31,8 +31,7 @@ import {
   IconArrowLeft,
   IconDotsVertical,
   IconPhone,
-  IconVideo,
-  IconAlertCircle,
+  IconVideo
 } from "@tabler/icons-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";

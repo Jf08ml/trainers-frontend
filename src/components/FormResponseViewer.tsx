@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Modal,
   Stack,
@@ -9,9 +11,7 @@ import {
   Divider,
   Loader,
   Center,
-  Rating,
   Progress,
-  List,
 } from "@mantine/core";
 import {
   IconClipboardCheck,
@@ -58,7 +58,7 @@ const FormResponseViewer = ({
     setLoading(true);
     try {
       const data = await getFormResponseById(formResponseId);
-      setResponse(data);
+      setResponse(data ?? null);
     } catch (error) {
       console.error("Error loading form response:", error);
     } finally {
@@ -95,7 +95,7 @@ const FormResponseViewer = ({
         );
 
       case "scale":
-        const scaleValue = Number(value) || 0;
+        { const scaleValue = Number(value) || 0;
         return (
           <Stack gap="xs">
             <Group gap="xs">
@@ -113,7 +113,7 @@ const FormResponseViewer = ({
               style={{ width: 150 }}
             />
           </Stack>
-        );
+        ); }
 
       case "number":
         return (

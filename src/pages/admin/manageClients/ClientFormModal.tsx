@@ -224,7 +224,7 @@ const ClientFormModal: React.FC<ClientFormModalProps> = ({
         email: email.trim(),
         password: password.trim() || undefined,
         birthDate: birthDate || null,
-        assignedEmployeeId: assignedEmployeeId || null,
+        assignedEmployeeId: assignedEmployeeId || undefined,
       };
 
       if (client) {

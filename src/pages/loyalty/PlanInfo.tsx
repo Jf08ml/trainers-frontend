@@ -1,6 +1,4 @@
 import React from "react";
-import LoyaltyPlan from "./LoyaltyPlan";
-import ReferredPlan from "./ReferredPlan";
 import { Card, Flex, Group, Text, Avatar, Button, Center, Stack } from "@mantine/core";
 import { Client as ClientType } from "../../services/clientService";
 import { Organization } from "../../services/organizationService";
@@ -16,12 +14,6 @@ const PlanInfo: React.FC<PlanInfoProps> = ({
   organization,
   onLogout,
 }) => {
-  // Defaults para evitar NaN/undefined en props de componentes hijos
-  const totalServices = organization?.serviceCount ?? 0;
-  const serviceReward = organization?.serviceReward ?? "Sin recompensa";
-  const totalReferrals = organization?.referredCount ?? 0;
-  const referredReward = organization?.referredReward ?? "Sin recompensa";
-
   // Branding: color de fondo para avatar, si existe
   const avatarBg =
     organization?.branding?.primaryColor ||
@@ -96,24 +88,6 @@ const PlanInfo: React.FC<PlanInfoProps> = ({
                   )}
                 </Group>
               </Stack>
-            </Card.Section>
-
-            {/* Sección de servicios tomados */}
-            <Card.Section inheritPadding>
-              <LoyaltyPlan
-                servicesTaken={client.servicesTaken || 0}
-                totalServices={totalServices}
-                serviceReward={serviceReward}
-              />
-            </Card.Section>
-
-            {/* Sección de referidos */}
-            <Card.Section inheritPadding>
-              <ReferredPlan
-                referralsMade={client.referralsMade || 0}
-                totalReferrals={totalReferrals}
-                referredReward={referredReward}
-              />
             </Card.Section>
 
             {/* Botón de logout */}

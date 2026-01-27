@@ -9,16 +9,10 @@ import {
   useMantineTheme,
   rem,
   Stack,
-  Badge,
-  Grid,
   Group,
   Button,
-  Divider,
 } from "@mantine/core";
-import { ReactNode, useEffect, useState } from "react";
-import { formatCurrency } from "../../utils/formatCurrency";
-import { useSelector } from "react-redux";
-import { selectOrganization } from "../../features/organization/sliceOrganization";
+import { ReactNode } from "react";
 
 interface Feature {
   title: string;
@@ -38,11 +32,9 @@ export function LandingLayout({
   features,
   welcomeTitle,
   welcomeDescription,
-  organizationId,
 }: LandingLayoutProps) {
   const theme = useMantineTheme();
   const primary = theme.colors[theme.primaryColor][6];
-  const org = useSelector(selectOrganization);
 
   return (
     <Box

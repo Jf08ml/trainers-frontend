@@ -5,7 +5,6 @@ import { Employee } from "./employeeService";
 
 export interface Reservation {
   _id?: string;
-  serviceId: Service | string;
   employeeId: Employee | string | null;
   startDate: Date | string;
   customer: string | null;
@@ -23,7 +22,6 @@ export interface Reservation {
 
 export interface CreateReservationPayload {
   _id?: string;
-  serviceId: Service | string;
   employeeId: Employee | string | null;
   startDate: Date | string;
   customerDetails: {
