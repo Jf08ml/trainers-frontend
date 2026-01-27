@@ -16,7 +16,6 @@ import {
   Divider,
 } from "@mantine/core";
 import { ReactNode, useEffect, useState } from "react";
-import { getServicesByOrganizationId, Service } from "../../services/serviceService";
 import { formatCurrency } from "../../utils/formatCurrency";
 import { useSelector } from "react-redux";
 import { selectOrganization } from "../../features/organization/sliceOrganization";
@@ -43,31 +42,7 @@ export function LandingLayout({
 }: LandingLayoutProps) {
   const theme = useMantineTheme();
   const primary = theme.colors[theme.primaryColor][6];
-  const [services, setServices] = useState<Service[]>([]);
-  const [loading, setLoading] = useState(true);
   const org = useSelector(selectOrganization);
-
-  useEffect(() => {
-    const loadTopServices = async () => {
-      if (!organizationId) return;
-
-      try {
-        const allServices = await getServicesByOrganizationId(organizationId);
-        // Obtener solo los primeros 6 servicios activos, ordenados por precio descendente
-        const topServices = allServices
-          .filter((s) => s.isActive !== false)
-          .sort((a, b) => b.price - a.price)
-          .slice(0, 6);
-        setServices(topServices);
-      } catch (error) {
-        console.error("Error cargando servicios:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadTopServices();
-  }, [organizationId]);
 
   return (
     <Box
@@ -153,147 +128,6 @@ export function LandingLayout({
               Descubre lo que tenemos para ti
             </Text>
           </div>
-
-          {loading ? (
-            <Text ta="center" c="dimmed">
-              Cargando servicios...
-            </Text>
-          ) : services.length > 0 ? (
-            <Grid>
-              {services.map((service) => (
-                <Grid.Col key={service._id} span={{ base: 12, sm: 6, md: 4 }}>
-                  <Card
-                    shadow="sm"
-                    padding={0}
-                    radius="md"
-                    withBorder
-                    style={{
-                      height: "100%",
-                      transition: "all 200ms ease",
-                      cursor: "pointer",
-                      overflow: "hidden",
-                    }}
-                    className="service-card"
-                  >
-                    <Stack gap={0} h="100%">
-                      {/* Imagen del servicio */}
-                      {service.images && service.images.length > 0 ? (
-                        <Box
-                          style={{
-                            width: "100%",
-                            height: "300px",
-                            position: "relative",
-                            overflow: "hidden",
-                          }}
-                        >
-                          <img
-                            src={service.images[0]}
-                            alt={service.name}
-                            style={{
-                              width: "100%",
-                              height: "100%",
-                              objectFit: "cover",
-                            }}
-                          />
-                          <Badge
-                            color={theme.primaryColor}
-                            variant="filled"
-                            style={{
-                              position: "absolute",
-                              top: 12,
-                              right: 12,
-                            }}
-                          >
-                            {service.type}
-                          </Badge>
-                        </Box>
-                      ) : (
-                        <Box
-                          style={{
-                            width: "100%",
-                            height: 200,
-                            background: `linear-gradient(135deg, ${theme.colors[theme.primaryColor][1]} 0%, ${theme.colors[theme.primaryColor][3]} 100%)`,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            position: "relative",
-                          }}
-                        >
-                          <Text
-                            size="xl"
-                            fw={700}
-                            c={theme.colors[theme.primaryColor][6]}
-                          >
-                            {service.name.charAt(0).toUpperCase()}
-                          </Text>
-                          <Badge
-                            color={theme.primaryColor}
-                            variant="filled"
-                            style={{
-                              position: "absolute",
-                              top: 12,
-                              right: 12,
-                            }}
-                          >
-                            {service.type}
-                          </Badge>
-                        </Box>
-                      )}
-
-                      {/* Contenido de la tarjeta */}
-                      <Stack gap="md" p="lg" style={{ flex: 1 }}>
-                        <div style={{ flex: 1 }}>
-                          <Text
-                            fw={700}
-                            fz="lg"
-                            c={theme.colors.gray[9]}
-                            lineClamp={2}
-                            mb="xs"
-                          >
-                            {service.name}
-                          </Text>
-
-                          {service.description && (
-                            <Text size="sm" c="dimmed" lineClamp={3} mb="xs">
-                              {service.description}
-                            </Text>
-                          )}
-                        </div>
-
-                        <Divider />
-
-                        <Group justify="space-between" align="center">
-                          <div>
-                            {!service.hidePrice && (
-                              <Text fw={700} fz="xl" c={primary}>
-                                {formatCurrency(service.price, org?.currency || "COP")}
-                              </Text>
-                            )}
-                            <Text size="xs" c="dimmed">
-                              {service.duration} min
-                            </Text>
-                          </div>
-                          <Button
-                            component={Link}
-                            to="/online-reservation"
-                            size="sm"
-                            variant="light"
-                            color={theme.primaryColor}
-                          >
-                            Reservar
-                          </Button>
-                        </Group>
-                      </Stack>
-                    </Stack>
-                  </Card>
-                </Grid.Col>
-              ))}
-            </Grid>
-          ) : (
-            <Text ta="center" c="dimmed">
-              No hay servicios disponibles
-            </Text>
-          )}
 
           <Group justify="center" mt="lg">
             <Button

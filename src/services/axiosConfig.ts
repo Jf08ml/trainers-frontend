@@ -80,6 +80,10 @@ const apiNotification: AxiosInstance = createAxiosInstance(
 const apiPayments: AxiosInstance = createAxiosInstance(
   `${API_BASE_URL}/payments`
 );
+const apiExercise: AxiosInstance = createAxiosInstance(
+  `${API_BASE_URL}/exercises`
+);
+const apiTraining: AxiosInstance = createAxiosInstance(API_BASE_URL);
 
 export {
   apiGeneral,
@@ -96,4 +100,6 @@ export {
   apiReservation,
   apiNotification,
   apiPayments,
+  apiExercise,
+  apiTraining,
 };

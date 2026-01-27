@@ -70,18 +70,28 @@ const LoginAdmin: React.FC = () => {
       const organizationId = organization?._id as string;
       const data = await login(email, password, organizationId);
       if (data) {
-        const organizationId =
+        const finalOrganizationId =
           data.userType === "admin" ? data.userId : data.organizationId;
         dispatch(
           loginSuccess({
             userId: data.userId,
-            organizationId,
+            organizationId: finalOrganizationId,
             token: data.token,
             role: data.userType,
             permissions: data.userPermissions,
+            userName: data.name || data.email,
+            userEmail: data.email,
           })
         );
-        navigation("/gestionar-agenda");
+
+        // Redireccionar según el tipo de usuario
+        if (data.userType === "admin") {
+          navigation("/admin");
+        } else if (data.userType === "employee") {
+          navigation("/employee");
+        } else if (data.userType === "client") {
+          navigation("/client");
+        }
 
         if (rememberMe) {
           localStorage.setItem("rememberedEmail", email);

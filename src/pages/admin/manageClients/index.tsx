@@ -15,13 +15,12 @@ import { useState, useEffect, useMemo } from "react";
 import ClientFormModal from "./ClientFormModal";
 import BulkUploadModal from "./BulkUploadModal";
 import ClientTable from "./ClientTable";
+import ClientFormsHistoryModal from "./ClientFormsHistoryModal";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { BsSearch } from "react-icons/bs";
 import { IconFileUpload } from "@tabler/icons-react";
 import {
   deleteClient,
-  registerReferral,
-  registerService,
   Client,
   getClientsByOrganizationId,
 } from "../../../services/clientService";
@@ -40,6 +39,11 @@ const ClientsDashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [editCLient, setEditClient] = useState<Client | null>(null);
 
+  // Forms history modal state
+  const [formsModalOpen, setFormsModalOpen] = useState(false);
+  const [formsClientId, setFormsClientId] = useState<string | null>(null);
+  const [formsClientName, setFormsClientName] = useState("");
+
   const organizationId = useSelector(
     (state: RootState) => state.auth.organizationId
   );
@@ -51,6 +55,12 @@ const ClientsDashboard = () => {
   };
 
   const handleCloseModal = () => setOpenModal(false);
+
+  const handleViewForms = (client: Client) => {
+    setFormsClientId(client._id);
+    setFormsClientName(client.name);
+    setFormsModalOpen(true);
+  };
 
   const fetchClients = async () => {
     setIsLoading(true);
@@ -87,52 +97,6 @@ const ClientsDashboard = () => {
         c.phoneNumber.toLowerCase().includes(q)
     );
   }, [debounced, clients]);
-
-  const handleRegisterService = async (clientId: string) => {
-    try {
-      await registerService(clientId);
-      showNotification({
-        title: "Servicio registrado",
-        message: "El servicio ha sido registrado correctamente",
-        color: "blue",
-        autoClose: 1000,
-        position: "top-right",
-      });
-      fetchClients();
-    } catch (error) {
-      console.error(error);
-      showNotification({
-        title: "Error al registrar servicio",
-        message: "No fue posible registrar el servicio. Intenta nuevamente.",
-        color: "red",
-        autoClose: 5000,
-        position: "top-right",
-      });
-    }
-  };
-
-  const handleReferral = async (clientId: string) => {
-    try {
-      await registerReferral(clientId);
-      showNotification({
-        title: "Referido registrado",
-        message: "El referido ha sido registrado correctamente",
-        color: "blue",
-        autoClose: 1000,
-        position: "top-right",
-      });
-      fetchClients();
-    } catch (error) {
-      console.error(error);
-      showNotification({
-        title: "Error al registrar referido",
-        message: "No fue posible registrar el referido. Intenta nuevamente.",
-        color: "red",
-        autoClose: 5000,
-        position: "top-right",
-      });
-    }
-  };
 
   const handleDeleteClient = async (id: string) => {
     try {
@@ -229,9 +193,8 @@ const ClientsDashboard = () => {
           <ClientTable
             clients={filteredClients}
             handleDeleteClient={handleDeleteClient}
-            handleRegisterService={handleRegisterService}
-            handleReferral={handleReferral}
             handleEditClient={handleOpenModal}
+            handleViewForms={handleViewForms}
             error={error}
           />
         </Card>
@@ -249,6 +212,17 @@ const ClientsDashboard = () => {
         opened={openBulkUploadModal}
         onClose={() => setOpenBulkUploadModal(false)}
         onUploadComplete={fetchClients}
+      />
+
+      <ClientFormsHistoryModal
+        opened={formsModalOpen}
+        onClose={() => {
+          setFormsModalOpen(false);
+          setFormsClientId(null);
+          setFormsClientName("");
+        }}
+        clientId={formsClientId}
+        clientName={formsClientName}
       />
     </Box>
   );

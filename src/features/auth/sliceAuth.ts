@@ -7,6 +7,8 @@ interface AuthState {
   token: string | null;
   role: string | null;
   permissions: string[];
+  userName: string | null;
+  userEmail: string | null;
 }
 
 // Utilidades para manejar localStorage
@@ -30,6 +32,8 @@ const initialState: AuthState = {
   token: storedToken,
   role: storedRole,
   permissions: [],
+  userName: getStorageItem("userName"),
+  userEmail: getStorageItem("userEmail"),
 };
 
 const authSlice = createSlice({
@@ -44,6 +48,8 @@ const authSlice = createSlice({
         token: string;
         role: string;
         permissions: string[];
+        userName?: string;
+        userEmail?: string;
       }>
     ) => {
       state.isAuthenticated = true;
@@ -52,11 +58,19 @@ const authSlice = createSlice({
       state.token = action.payload.token;
       state.role = action.payload.role;
       state.permissions = action.payload.permissions;
+      state.userName = action.payload.userName || null;
+      state.userEmail = action.payload.userEmail || null;
 
       // Guardar los datos en localStorage
       setStorageItem("userId", action.payload.userId);
       setStorageItem("token", action.payload.token);
       setStorageItem("role", action.payload.role);
+      if (action.payload.userName) {
+        setStorageItem("userName", action.payload.userName);
+      }
+      if (action.payload.userEmail) {
+        setStorageItem("userEmail", action.payload.userEmail);
+      }
     },
     setOrganizationId: (state, action: PayloadAction<string>) => {
       state.organizationId = action.payload;
@@ -71,11 +85,15 @@ const authSlice = createSlice({
       state.token = null;
       state.role = null;
       state.permissions = [];
+      state.userName = null;
+      state.userEmail = null;
 
       // Eliminar datos de localStorage
       removeStorageItem("userId");
       removeStorageItem("token");
       removeStorageItem("role");
+      removeStorageItem("userName");
+      removeStorageItem("userEmail");
     },
   },
 });

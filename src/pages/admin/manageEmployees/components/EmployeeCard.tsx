@@ -13,8 +13,6 @@ import {
   Menu,
 } from "@mantine/core";
 import { BsPencil, BsTrash, BsThreeDotsVertical } from "react-icons/bs";
-import { FaMoneyBillTransfer } from "react-icons/fa6";
-import { RiUserReceivedFill } from "react-icons/ri";
 import { FaUserCheck } from "react-icons/fa";
 import { Employee } from "../../../../services/employeeService";
 
@@ -23,8 +21,6 @@ interface Props {
   onEdit: (employee: Employee) => void;
   onDelete: (employeeId: string) => void;
   onActive: (employeeId: string) => void;
-  onViewDetails: (employee: Employee) => void;
-  onShowAdvanceModal: (employee: Employee) => void;
 }
 
 const EmployeeCard: React.FC<Props> = ({
@@ -32,8 +28,6 @@ const EmployeeCard: React.FC<Props> = ({
   onEdit,
   onDelete,
   onActive,
-  onViewDetails,
-  onShowAdvanceModal,
 }) => {
   const accent = employee.color || "#e2e8f0";
 
@@ -55,12 +49,6 @@ const EmployeeCard: React.FC<Props> = ({
           </ActionIcon>
         </Menu.Target>
         <Menu.Dropdown>
-          <Menu.Item leftSection={<RiUserReceivedFill />} onClick={() => onViewDetails(employee)}>
-            Ver detalles
-          </Menu.Item>
-          <Menu.Item leftSection={<FaMoneyBillTransfer />} onClick={() => onShowAdvanceModal(employee)}>
-            Adelantos
-          </Menu.Item>
           <Menu.Item leftSection={<BsPencil />} onClick={() => onEdit(employee)}>
             Editar
           </Menu.Item>
@@ -124,12 +112,6 @@ const EmployeeCard: React.FC<Props> = ({
 
         {/* Acciones rápidas para desktop (opcional) */}
         <Flex justify="flex-end" gap="xs" mt="sm" visibleFrom="md">
-          <ActionIcon variant="light" onClick={() => onShowAdvanceModal(employee)} title="Adelantos">
-            <FaMoneyBillTransfer />
-          </ActionIcon>
-          <ActionIcon variant="light" onClick={() => onViewDetails(employee)} title="Detalles">
-            <RiUserReceivedFill />
-          </ActionIcon>
           <ActionIcon variant="light" onClick={() => onEdit(employee)} title="Editar">
             <BsPencil />
           </ActionIcon>

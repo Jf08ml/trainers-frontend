@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { apiReservation } from "./axiosConfig";
 import { handleAxiosError } from "../utils/handleAxiosError";
-import { Service } from "./serviceService";
 import { Employee } from "./employeeService";
 
 export interface Reservation {

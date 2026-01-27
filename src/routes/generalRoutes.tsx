@@ -1,23 +1,19 @@
+import React from "react";
 import SearchClient from "../pages/loyalty/SearchClient";
 import PlanViewer from "../pages/loyalty/PlanViewer";
-import ServicesAndPrices from "../components/ServicesAndPrices";
 import LoginAdmin from "../pages/admin/LoginAdmin";
 import ClientManagement from "../pages/admin/manageClients";
-import ScheduleView from "../pages/admin/manageAgenda";
 import ProtectedRoute from "../components/ProtectedRoute";
-import { JSX } from "react/jsx-runtime";
-import AdminServices from "../pages/admin/manageServices";
 import AdminEmployees from "../pages/admin/manageEmployees";
 import OrganizationInfo from "../pages/admin/OrganizationInfo/index";
-import EmployeeInfo from "../pages/account/EmployeeInfo";
-// import Booking from "../pages/onlineReservation/Booking";
 import Home from "../pages/Home";
 import Location from "../pages/location/location";
 import WhatsappMultiSession from "../pages/admin/manageWhatsapp";
 import SuperadminManagement from "../pages/superadmin/SuperadminManagement";
-
+import DashboardCliente from "../pages/client/DashboardCliente";
+import DashboardEmpleado from "../pages/employee/DashboardEmpleado";
+import DashboardAdmin from "../pages/admin/DashboardAdmin";
 import MyMembership from "../pages/admin/MyMembership";
-import AdminAnalyticsDashboard from "../pages/admin/analyticsDashboard";
 import PublicCancelPage from "../pages/public/PublicCancelPage";
 import WhatsappTemplateEditor from "../pages/admin/WhatsappTemplateEditor";
 import PaymentSuccess from "../pages/public/PaymentSuccess";
@@ -26,8 +22,20 @@ import PaymentHistory from "../pages/admin/PaymentHistory";
 import CampaignList from "../pages/admin/campaigns/CampaignList";
 import CampaignWizard from "../pages/admin/campaigns/CampaignWizard";
 import CampaignDetail from "../pages/admin/campaigns/CampaignDetail";
+import ManageExercises from "../pages/admin/manageExercises";
+import TrainingCatalogs from "../pages/admin/TrainingCatalogs";
+import TrainingSessions from "../pages/admin/TrainingSessions";
+import SessionBuilder from "../pages/admin/SessionBuilder";
+import WeeklyPlans from "../pages/admin/WeeklyPlans";
+import ClientWeeklyPlans from "../pages/admin/ClientWeeklyPlans";
+import WeeklyPlanBuilder from "../pages/admin/WeeklyPlanBuilder";
+import ClientTrainingPlan from "../pages/client/ClientTrainingPlan";
+import FormTemplates from "../pages/admin/FormTemplates";
+import FormBuilder from "../pages/admin/FormBuilder";
+import ClientForms from "../pages/client/ClientForms";
 
 const generalRoutes = [
+  // ==================== RUTAS PÚBLICAS ====================
   {
     path: "/",
     component: Home,
@@ -77,14 +85,6 @@ const generalRoutes = [
     },
   },
   {
-    path: "/servicios-precios",
-    component: ServicesAndPrices,
-    MediaMetadata: {
-      title: "Nuestros Servicios",
-      description: "Consulta nuestros  en Galaxia Glamour.",
-    },
-  },
-  {
     path: "/location",
     component: Location,
     MediaMetadata: {
@@ -96,51 +96,41 @@ const generalRoutes = [
     path: "/login-admin",
     component: LoginAdmin,
     MediaMetadata: {
-      title: "Administrar clientes",
-      description: "Administrar clientes en Galaxia Glamour.",
+      title: "Iniciar Sesión",
+      description: "Inicia sesión en tu cuenta.",
     },
   },
+
+  // ==================== RUTAS ADMIN ====================
   {
-    path: "/gestionar-clientes",
-    component: (props: JSX.IntrinsicAttributes) => (
+    path: "/admin",
+    component: () => (
       <ProtectedRoute>
-        <ClientManagement {...props} />
+        <DashboardAdmin />
       </ProtectedRoute>
     ),
     MediaMetadata: {
-      title: "Dashboard",
-      description: "Dashboard de Galaxia Glamour.",
+      title: "Dashboard Admin",
+      description: "Panel de administración principal.",
     },
   },
   {
-    path: "/gestionar-agenda",
-    component: (props: JSX.IntrinsicAttributes) => (
+    path: "/admin/gestionar-clientes",
+    component: () => (
       <ProtectedRoute>
-        <ScheduleView {...props} />
+        <ClientManagement />
       </ProtectedRoute>
     ),
     MediaMetadata: {
-      title: "Gestionar Agenda",
-      description: "Gestiona la agenda de Galaxia Glamour.",
+      title: "Gestionar Clientes",
+      description: "Administra los clientes de tu negocio.",
     },
   },
   {
-    path: "/gestionar-servicios",
-    component: (props: JSX.IntrinsicAttributes) => (
+    path: "/admin/gestionar-empleados",
+    component: () => (
       <ProtectedRoute>
-        <AdminServices {...props} />
-      </ProtectedRoute>
-    ),
-    MediaMetadata: {
-      title: "Gestionar Servicios",
-      description: "Gestiona los servicios de Galaxia Glamour.",
-    },
-  },
-  {
-    path: "/gestionar-empleados",
-    component: (props: JSX.IntrinsicAttributes) => (
-      <ProtectedRoute>
-        <AdminEmployees {...props} />
+        <AdminEmployees />
       </ProtectedRoute>
     ),
     MediaMetadata: {
@@ -149,38 +139,22 @@ const generalRoutes = [
     },
   },
   {
-    path: "/informacion-negocio",
-    component: (props: JSX.IntrinsicAttributes) => (
+    path: "/admin/gestionar-whatsapp",
+    component: () => (
       <ProtectedRoute>
-        <OrganizationInfo {...props} />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/informacion-empleado",
-    component: (props: JSX.IntrinsicAttributes) => (
-      <ProtectedRoute>
-        <EmployeeInfo {...props} />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/gestionar-whatsapp",
-    component: (props: JSX.IntrinsicAttributes) => (
-      <ProtectedRoute>
-        <WhatsappMultiSession {...props} />
+        <WhatsappMultiSession />
       </ProtectedRoute>
     ),
     MediaMetadata: {
-      title: "Gestionar Empleados",
-      description: "Gestiona los empleados de Galaxia Glamour.",
+      title: "Gestionar WhatsApp",
+      description: "Configura tu integración de WhatsApp.",
     },
   },
   {
-    path: "/mensajes-whatsapp",
-    component: (props: JSX.IntrinsicAttributes) => (
+    path: "/admin/mensajes-whatsapp",
+    component: () => (
       <ProtectedRoute>
-        <WhatsappTemplateEditor {...props} />
+        <WhatsappTemplateEditor />
       </ProtectedRoute>
     ),
     MediaMetadata: {
@@ -188,49 +162,11 @@ const generalRoutes = [
       description: "Personaliza los mensajes automáticos de WhatsApp.",
     },
   },
-    {
-    path: "/analytics-dashboard",
-    component: (props: JSX.IntrinsicAttributes) => (
-      <ProtectedRoute>
-        <AdminAnalyticsDashboard {...props} />
-      </ProtectedRoute>
-    ),
-    MediaMetadata: {
-      title: "Analiticas del negocio",
-      description: "Ve analiticas del negocio",
-    },
-  },
-  {
-    path: "/my-membership",
-    component: (props: JSX.IntrinsicAttributes) => (
-      <ProtectedRoute>
-        <MyMembership {...props} />
-      </ProtectedRoute>
-    ),
-    MediaMetadata: {
-      title: "Mi Membresía",
-      description: "Ver detalles de tu membresía y plan",
-    },
-  },
-  {
-    path: "/payment-history",
-    component: (props: JSX.IntrinsicAttributes) => (
-      <ProtectedRoute>
-        <PaymentHistory {...props} />
-      </ProtectedRoute>
-    ),
-    MediaMetadata: {
-      title: "Historial de Pagos",
-      description: "Eventos recientes del proveedor de pagos",
-    },
-  },
-
-  // Campaign routes
   {
     path: "/admin/campaigns",
-    component: (props: JSX.IntrinsicAttributes) => (
+    component: () => (
       <ProtectedRoute>
-        <CampaignList {...props} />
+        <CampaignList />
       </ProtectedRoute>
     ),
     MediaMetadata: {
@@ -240,9 +176,9 @@ const generalRoutes = [
   },
   {
     path: "/admin/campaigns/new",
-    component: (props: JSX.IntrinsicAttributes) => (
+    component: () => (
       <ProtectedRoute>
-        <CampaignWizard {...props} />
+        <CampaignWizard />
       </ProtectedRoute>
     ),
     MediaMetadata: {
@@ -252,9 +188,9 @@ const generalRoutes = [
   },
   {
     path: "/admin/campaigns/:campaignId",
-    component: (props: JSX.IntrinsicAttributes) => (
+    component: () => (
       <ProtectedRoute>
-        <CampaignDetail {...props} />
+        <CampaignDetail />
       </ProtectedRoute>
     ),
     MediaMetadata: {
@@ -262,16 +198,502 @@ const generalRoutes = [
       description: "Ver detalles y métricas de campaña",
     },
   },
+  {
+    path: "/admin/exercises",
+    component: () => (
+      <ProtectedRoute>
+        <ManageExercises />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Gestión de Ejercicios",
+      description: "Administra el catálogo de ejercicios",
+    },
+  },
+  {
+    path: "/admin/training-catalogs",
+    component: () => (
+      <ProtectedRoute>
+        <TrainingCatalogs />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Catálogos de Entrenamiento",
+      description: "Administra grupos musculares, equipamiento, etiquetas y objetivos",
+    },
+  },
+  {
+    path: "/admin/training-sessions",
+    component: () => (
+      <ProtectedRoute>
+        <TrainingSessions />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Sesiones de Entrenamiento",
+      description: "Gestiona sesiones y plantillas de entrenamiento",
+    },
+  },
+  {
+    path: "/admin/training-sessions/new",
+    component: () => (
+      <ProtectedRoute>
+        <SessionBuilder />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Nueva Sesión",
+      description: "Crea una nueva sesión de entrenamiento",
+    },
+  },
+  {
+    path: "/admin/training-sessions/edit/:id",
+    component: () => (
+      <ProtectedRoute>
+        <SessionBuilder />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Editar Sesión",
+      description: "Edita una sesión de entrenamiento existente",
+    },
+  },
+  {
+    path: "/admin/weekly-plans",
+    component: () => (
+      <ProtectedRoute>
+        <WeeklyPlans />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Planes Semanales",
+      description: "Gestiona planes de entrenamiento semanales para clientes",
+    },
+  },
+  {
+    path: "/admin/weekly-plans/client/:clientId",
+    component: () => (
+      <ProtectedRoute>
+        <ClientWeeklyPlans />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Planes del Cliente",
+      description: "Gestiona los planes semanales de un cliente",
+    },
+  },
+  {
+    path: "/admin/weekly-plans/new",
+    component: () => (
+      <ProtectedRoute>
+        <WeeklyPlanBuilder />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Nuevo Plan Semanal",
+      description: "Crea un nuevo plan de entrenamiento semanal",
+    },
+  },
+  {
+    path: "/admin/weekly-plans/edit/:id",
+    component: () => (
+      <ProtectedRoute>
+        <WeeklyPlanBuilder />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Editar Plan Semanal",
+      description: "Edita un plan de entrenamiento semanal existente",
+    },
+  },
+  {
+    path: "/admin/form-templates",
+    component: () => (
+      <ProtectedRoute>
+        <FormTemplates />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Formularios de Feedback",
+      description: "Gestiona formularios de feedback para clientes",
+    },
+  },
+  {
+    path: "/admin/form-templates/nuevo",
+    component: () => (
+      <ProtectedRoute>
+        <FormBuilder />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Nuevo Formulario",
+      description: "Crea un nuevo formulario de feedback",
+    },
+  },
+  {
+    path: "/admin/form-templates/:id/editar",
+    component: () => (
+      <ProtectedRoute>
+        <FormBuilder />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Editar Formulario",
+      description: "Edita un formulario de feedback existente",
+    },
+  },
+  {
+    path: "/admin/my-membership",
+    component: () => (
+      <ProtectedRoute>
+        <MyMembership />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Mi Membresía",
+      description: "Ver detalles de tu membresía y plan",
+    },
+  },
+  {
+    path: "/admin/payment-history",
+    component: () => (
+      <ProtectedRoute>
+        <PaymentHistory />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Historial de Pagos",
+      description: "Eventos recientes del proveedor de pagos",
+    },
+  },
+  {
+    path: "/admin/informacion-negocio",
+    component: () => (
+      <ProtectedRoute>
+        <OrganizationInfo />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Información del Negocio",
+      description: "Configura la información de tu negocio.",
+    },
+  },
 
-  // Superadmin routes
+  // ==================== RUTAS EMPLOYEE ====================
+  {
+    path: "/employee",
+    component: () => (
+      <ProtectedRoute>
+        <DashboardEmpleado />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Dashboard de Empleado",
+      description: "Tu panel de empleado.",
+    },
+  },
+  {
+    path: "/employee/mis-clientes",
+    component: () => {
+      // Lazy import para evitar cargar todo en el bundle inicial
+      const EmployeeClients = React.lazy(() => import("../pages/employee/EmployeeClients"));
+      return (
+        <ProtectedRoute>
+          <React.Suspense fallback={<div>Cargando...</div>}>
+            <EmployeeClients />
+          </React.Suspense>
+        </ProtectedRoute>
+      );
+    },
+    MediaMetadata: {
+      title: "Mis Clientes",
+      description: "Clientes asignados al entrenador.",
+    },
+  },
+  {
+    path: "/employee/mis-clientes/:clientId/planes",
+    component: () => (
+      <ProtectedRoute>
+        <ClientWeeklyPlans />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Planes del Cliente",
+      description: "Planes semanales del cliente.",
+    },
+  },
+  {
+    path: "/employee/mis-clientes/:clientId/planes/nuevo",
+    component: () => (
+      <ProtectedRoute>
+        <WeeklyPlanBuilder />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Nuevo Plan Semanal",
+      description: "Crea un nuevo plan semanal para el cliente.",
+    },
+  },
+  {
+    path: "/employee/mis-clientes/:clientId/planes/:planId/editar",
+    component: () => (
+      <ProtectedRoute>
+        <WeeklyPlanBuilder />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Editar Plan Semanal",
+      description: "Edita el plan semanal del cliente.",
+    },
+  },
+  {
+    path: "/employee/exercises",
+    component: () => (
+      <ProtectedRoute>
+        <ManageExercises />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Ejercicios",
+      description: "Gestión de ejercicios.",
+    },
+  },
+  {
+    path: "/employee/training-sessions",
+    component: () => (
+      <ProtectedRoute>
+        <TrainingSessions />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Sesiones de Entrenamiento",
+      description: "Gestión de sesiones.",
+    },
+  },
+  {
+    path: "/employee/training-sessions/nueva",
+    component: () => (
+      <ProtectedRoute>
+        <SessionBuilder />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Nueva Sesión",
+      description: "Crea una nueva sesión de entrenamiento.",
+    },
+  },
+  {
+    path: "/employee/training-sessions/:sessionId/editar",
+    component: () => (
+      <ProtectedRoute>
+        <SessionBuilder />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Editar Sesión",
+      description: "Edita la sesión de entrenamiento.",
+    },
+  },
+  {
+    path: "/employee/weekly-plans",
+    component: () => (
+      <ProtectedRoute>
+        <WeeklyPlans />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Planes Semanales",
+      description: "Gestión de planes semanales.",
+    },
+  },
+  {
+    path: "/employee/weekly-plans/:clientId",
+    component: () => (
+      <ProtectedRoute>
+        <ClientWeeklyPlans />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Planes del Cliente",
+      description: "Planes semanales del cliente.",
+    },
+  },
+  {
+    path: "/employee/weekly-plans/:clientId/nuevo",
+    component: () => (
+      <ProtectedRoute>
+        <WeeklyPlanBuilder />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Nuevo Plan Semanal",
+      description: "Crea un nuevo plan semanal.",
+    },
+  },
+  {
+    path: "/employee/weekly-plans/:clientId/:planId/editar",
+    component: () => (
+      <ProtectedRoute>
+        <WeeklyPlanBuilder />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Editar Plan Semanal",
+      description: "Edita el plan semanal.",
+    },
+  },
+  {
+    path: "/employee/training-catalogs",
+    component: () => (
+      <ProtectedRoute>
+        <TrainingCatalogs />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Catálogos de Entrenamiento",
+      description: "Gestión de catálogos.",
+    },
+  },
+
+  // ==================== RUTAS CLIENT ====================
+  {
+    path: "/client",
+    component: () => (
+      <ProtectedRoute>
+        <DashboardCliente />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Mi Centro de Bienestar",
+      description: "Tu dashboard personal.",
+    },
+  },
+  {
+    path: "/client/mi-perfil",
+    component: () => (
+      <ProtectedRoute>
+        <DashboardCliente />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Mi Perfil",
+      description: "Tu perfil de cliente.",
+    },
+  },
+  {
+    path: "/client/mi-entrenamiento",
+    component: () => (
+      <ProtectedRoute>
+        <ClientTrainingPlan />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Mi Entrenamiento",
+      description: "Tu plan de entrenamiento semanal.",
+    },
+  },
+  {
+    path: "/client/formularios",
+    component: () => (
+      <ProtectedRoute>
+        <ClientForms />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Mis Formularios",
+      description: "Completa formularios de feedback para tu entrenador.",
+    },
+  },
+
+  // ==================== RUTAS SUPERADMIN ====================
   {
     path: "/superadmin",
-    component: (props: JSX.IntrinsicAttributes) => (
-      <SuperadminManagement {...props} />
-    ),
+    component: SuperadminManagement,
     MediaMetadata: {
       title: "Panel de Superadmin",
       description: "Administra organizaciones y membresías.",
+    },
+  },
+
+  // ==================== RUTAS LEGADAS (para compatibilidad) ====================
+  {
+    path: "/gestionar-clientes",
+    component: () => (
+      <ProtectedRoute>
+        <ClientManagement />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Gestionar Clientes",
+      description: "Dashboard de Galaxia Glamour.",
+    },
+  },
+  {
+    path: "/gestionar-empleados",
+    component: () => (
+      <ProtectedRoute>
+        <AdminEmployees />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Gestionar Empleados",
+      description: "Gestiona los empleados de Galaxia Glamour.",
+    },
+  },
+  {
+    path: "/informacion-negocio",
+    component: () => (
+      <ProtectedRoute>
+        <OrganizationInfo />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/gestionar-whatsapp",
+    component: () => (
+      <ProtectedRoute>
+        <WhatsappMultiSession />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Gestionar WhatsApp",
+      description: "Gestiona los empleados de Galaxia Glamour.",
+    },
+  },
+  {
+    path: "/mensajes-whatsapp",
+    component: () => (
+      <ProtectedRoute>
+        <WhatsappTemplateEditor />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Mensajes de WhatsApp",
+      description: "Personaliza los mensajes automáticos de WhatsApp.",
+    },
+  },
+  {
+    path: "/my-membership",
+    component: () => (
+      <ProtectedRoute>
+        <MyMembership />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Mi Membresía",
+      description: "Ver detalles de tu membresía y plan",
+    },
+  },
+  {
+    path: "/payment-history",
+    component: () => (
+      <ProtectedRoute>
+        <PaymentHistory />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Historial de Pagos",
+      description: "Eventos recientes del proveedor de pagos",
     },
   },
 ];

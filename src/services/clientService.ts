@@ -1,24 +1,41 @@
 import { apiClient } from "./axiosConfig";
 import { handleAxiosError } from "../utils/handleAxiosError";
 
+// Definir la estructura del entrenador asignado
+export interface AssignedTrainer {
+  _id: string;
+  names: string;
+  email?: string;
+  phoneNumber?: string;
+  phone_e164?: string;
+  profilePhoto?: string;
+}
+
 // Definir la estructura de un cliente
 export interface Client {
   _id: string;
   name: string;
-  phoneNumber: string;
+  phoneNumber: string; // Número local sin código de país
+  phone_e164?: string; // Formato internacional E.164 (ej: +573001234567)
+  phone_country?: string; // Código de país ISO2 (ej: CO, MX, PE)
   email?: string;
-  servicesTaken: number;
-  referralsMade: number;
+  password?: string; // Opcional para login de clientes
   organizationId: string;
   birthDate: Date | null;
+  assignedEmployeeId?: string | AssignedTrainer; // ID del entrenador asignado
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface CreateClientPayload {
   name: string;
   phoneNumber: string;
   email?: string;
+  password?: string;
   organizationId: string;
   birthDate: Date | null;
+  assignedEmployeeId?: string | null;
+  initialFormId?: string; // Formulario inicial para asignar al cliente
 }
 
 interface Response<T> {
@@ -138,24 +155,6 @@ export const getClientByPhoneNumberAndOrganization = async (
   }
 };
 
-// Registrar un servicio tomado por el cliente
-export const registerService = async (clientId: string): Promise<void> => {
-  try {
-    await apiClient.post<Response<void>>(`/${clientId}/register-service`);
-  } catch (error) {
-    handleAxiosError(error, "Error al registrar el servicio");
-  }
-};
-
-// Registrar un referido hecho por el cliente
-export const registerReferral = async (clientId: string): Promise<void> => {
-  try {
-    await apiClient.post<Response<void>>(`/${clientId}/register-referral`);
-  } catch (error) {
-    handleAxiosError(error, "Error al registrar el referido");
-  }
-};
-
 // Carga masiva de clientes desde Excel
 export const bulkUploadClients = async (
   clients: Array<{
@@ -189,3 +188,35 @@ export const bulkUploadClients = async (
   }
 };
 
+// Obtener el entrenador asignado de un cliente
+export const getAssignedTrainer = async (
+  clientId: string
+): Promise<AssignedTrainer | null> => {
+  try {
+    const response = await apiClient.get<Response<AssignedTrainer | null>>(
+      `/${clientId}/assigned-trainer`
+    );
+    return response.data.data;
+  } catch (error) {
+    handleAxiosError(error, "Error al obtener el entrenador asignado");
+    return null;
+  }
+};
+
+// Obtener clientes asignados a un empleado
+export const getClientsByAssignedEmployee = async (
+  employeeId: string,
+  organizationId?: string
+): Promise<Client[]> => {
+  try {
+    const params = organizationId ? { organizationId } : {};
+    const response = await apiClient.get<Response<Client[]>>(
+      `/employees/${employeeId}/assigned-clients`,
+      { params }
+    );
+    return response.data.data;
+  } catch (error) {
+    handleAxiosError(error, "Error al obtener los clientes asignados");
+    return [];
+  }
+};

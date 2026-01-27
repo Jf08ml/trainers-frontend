@@ -19,7 +19,7 @@ import {
 } from "@mantine/core";
 import { useDebouncedValue, useMediaQuery } from "@mantine/hooks";
 import { BsSearch } from "react-icons/bs";
-import { BiCalendar, BiGroup } from "react-icons/bi";
+import { BiGroup } from "react-icons/bi";
 import { showNotification } from "@mantine/notifications";
 import {
   createEmployee,
@@ -29,14 +29,7 @@ import {
   type Employee,
 } from "../../../services/employeeService";
 import ModalCreateEdit from "./components/ModalCreateEditEmployee";
-import {
-  getServicesByOrganizationId,
-  type Service,
-} from "../../../services/serviceService";
 import EmployeeCard from "./components/EmployeeCard";
-import EmployeeDetailsModal from "./components/EmployeeDetailsModal";
-import AdvanceModal from "./components/AdvanceModal";
-import ScheduleOverview from "./components/ScheduleOverview";
 import { openConfirmModal } from "@mantine/modals";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
@@ -45,7 +38,6 @@ import CustomLoader from "../../../components/customLoader/CustomLoader";
 const AdminEmployees: React.FC = () => {
   const isMobile = useMediaQuery("(max-width: 48rem)");
   const [employees, setEmployees] = useState<Employee[]>([]);
-  const [services, setServices] = useState<Service[]>([]);
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 250);
 
@@ -53,13 +45,6 @@ const AdminEmployees: React.FC = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
-
-  const [showEmployeeDetails, setShowEmployeeDetails] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
-    null
-  );
-
-  const [showAdvanceModal, setShowAdvanceModal] = useState(false);
 
   const [initialLoaded, setInitialLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -78,16 +63,14 @@ const AdminEmployees: React.FC = () => {
   const loadAll = async () => {
     setLoading(true);
     try {
-      const [emps, svcs] = await Promise.all([
+      const [emps] = await Promise.all([
         getEmployeesByOrganizationId(organizationId!),
-        getServicesByOrganizationId(organizationId!),
       ]);
       // Activos arriba
       const ordered = [...emps].sort(
         (a, b) => Number(b.isActive) - Number(a.isActive)
       );
       setEmployees(ordered);
-      setServices(svcs);
     } catch (error) {
       console.error(error);
       showNotification({
@@ -159,16 +142,6 @@ const AdminEmployees: React.FC = () => {
         color: "orange",
       });
       throw new Error("Duplicate phone");
-    }
-
-    // Validation: at least one service selected
-    if (!employee.services || employee.services.length === 0) {
-      showNotification({
-        title: "Validación",
-        message: "Debes seleccionar al menos un servicio para el empleado",
-        color: "orange",
-      });
-      throw new Error("No services selected");
     }
 
     try {
@@ -279,22 +252,9 @@ const AdminEmployees: React.FC = () => {
 
   const handleEditEmployee = (employee: Employee) => {
     setEditingEmployee({
-      ...employee,
-      services: (employee.services || [])
-        .map((srv: any) => services.find((s) => s._id === srv._id)!)
-        .filter(Boolean),
+      ...employee
     });
     setIsModalOpen(true);
-  };
-
-  const showEmployeeDetailsModal = (employee: Employee) => {
-    setShowEmployeeDetails(true);
-    setSelectedEmployee(employee);
-  };
-
-  const handleShowAdvanceModal = (employee: Employee) => {
-    setShowAdvanceModal(true);
-    setSelectedEmployee(employee);
   };
 
   if (loading && !initialLoaded) return <CustomLoader />;
@@ -311,9 +271,6 @@ const AdminEmployees: React.FC = () => {
           <Tabs.List>
             <Tabs.Tab value="employees" leftSection={<BiGroup size={16} />}>
               Empleados
-            </Tabs.Tab>
-            <Tabs.Tab value="schedules" leftSection={<BiCalendar size={16} />}>
-              Vista de Horarios
             </Tabs.Tab>
           </Tabs.List>
 
@@ -403,21 +360,10 @@ const AdminEmployees: React.FC = () => {
                       onEdit={handleEditEmployee}
                       onDelete={handleDeleteEmployee}
                       onActive={(id) => handleActiveEmployee(id, true)}
-                      onViewDetails={showEmployeeDetailsModal}
-                      onShowAdvanceModal={handleShowAdvanceModal}
                     />
                   </Grid.Col>
                 ))}
               </Grid>
-            )}
-          </Tabs.Panel>
-
-          <Tabs.Panel value="schedules" pt="md">
-            {activeTab === "schedules" && (
-              <ScheduleOverview
-                organizationId={organizationId!}
-                employees={employees.filter((e) => e.isActive)}
-              />
             )}
           </Tabs.Panel>
         </Tabs>
@@ -431,20 +377,7 @@ const AdminEmployees: React.FC = () => {
           setEditingEmployee(null);
         }}
         employee={editingEmployee}
-        services={services}
         onSave={handleSaveEmployee}
-      />
-
-      <EmployeeDetailsModal
-        isOpen={showEmployeeDetails}
-        onClose={() => setShowEmployeeDetails(false)}
-        employee={selectedEmployee}
-      />
-
-      <AdvanceModal
-        isOpen={showAdvanceModal}
-        onClose={() => setShowAdvanceModal(false)}
-        employee={selectedEmployee}
       />
     </Container>
   );

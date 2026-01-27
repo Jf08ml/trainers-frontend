@@ -10,29 +10,22 @@ import {
   Image,
   Text,
   Loader,
-  Grid,
-  Checkbox,
-  ScrollArea,
-  Paper,
   Box,
   ColorInput,
   LoadingOverlay,
 } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import { useMediaQuery } from "@mantine/hooks";
 import { IoEyeOff } from "react-icons/io5";
 import { FaEye } from "react-icons/fa";
 import { BiImageAdd, BiSolidXCircle } from "react-icons/bi";
 
 import { uploadImage } from "../../../../services/imageService";
 import { Employee } from "../../../../services/employeeService";
-import { Service } from "../../../../services/serviceService";
 
 interface ModalCreateEditEmployeeProps {
   isOpen: boolean;
   onClose: () => void;
   employee: Employee | null;
-  services: Service[];
   onSave: (employee: Employee) => void;
 }
 
@@ -40,10 +33,8 @@ const ModalCreateEditEmployee: React.FC<ModalCreateEditEmployeeProps> = ({
   isOpen,
   onClose,
   employee,
-  services,
   onSave,
 }) => {
-  const isMobile = useMediaQuery("(max-width: 48rem)");
   const [editingEmployee, setEditingEmployee] = useState<Employee>({
     _id: "",
     names: "",
@@ -161,35 +152,12 @@ const ModalCreateEditEmployee: React.FC<ModalCreateEditEmployeeProps> = ({
     editingEmployee.phoneNumber.trim().length > 5 &&
     editingEmployee.email.trim().length > 3;
 
-  const handleServiceToggle = (serviceId: string) => {
-    const isSelected = editingEmployee.services?.some(
-      (srv) => srv._id === serviceId
-    );
-
-    if (isSelected) {
-      setEditingEmployee({
-        ...editingEmployee,
-        services: editingEmployee.services?.filter(
-          (srv) => srv._id !== serviceId
-        ) || [],
-      });
-    } else {
-      const service = services.find((srv) => srv._id === serviceId);
-      if (service) {
-        setEditingEmployee({
-          ...editingEmployee,
-          services: [...(editingEmployee.services || []), service],
-        });
-      }
-    }
-  };
-
   return (
     <Modal
       opened={isOpen}
       onClose={handleClose}
       title={employee ? "Editar Empleado" : "Agregar Empleado"}
-      size="xl"
+      size="lg"
       centered
     >
       <Box pos="relative">
@@ -208,233 +176,178 @@ const ModalCreateEditEmployee: React.FC<ModalCreateEditEmployeeProps> = ({
           }}
         />
 
-        <Grid>
-          {/* Columna izquierda - Información básica */}
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <Stack gap="md">
-              <TextInput
-                label="Nombre completo"
-                withAsterisk
-                placeholder="Ej: Juan Pérez"
-                value={editingEmployee.names}
-                onChange={(e) =>
-                  setEditingEmployee({
-                    ...editingEmployee,
-                    names: e.currentTarget.value,
-                  })
-                }
-              />
+        <Stack gap="md">
+          <TextInput
+            label="Nombre completo"
+            withAsterisk
+            placeholder="Ej: Juan Pérez"
+            value={editingEmployee.names}
+            onChange={(e) =>
+              setEditingEmployee({
+                ...editingEmployee,
+                names: e.currentTarget.value,
+              })
+            }
+          />
 
-              <TextInput
-                label="Posición"
-                withAsterisk
-                placeholder="Ej: Barbero"
-                value={editingEmployee.position}
-                onChange={(e) =>
-                  setEditingEmployee({
-                    ...editingEmployee,
-                    position: e.currentTarget.value,
-                  })
-                }
-              />
+          <TextInput
+            label="Posición"
+            withAsterisk
+            placeholder="Ej: Barbero"
+            value={editingEmployee.position}
+            onChange={(e) =>
+              setEditingEmployee({
+                ...editingEmployee,
+                position: e.currentTarget.value,
+              })
+            }
+          />
 
-              <TextInput
-                label="Número de teléfono"
-                withAsterisk
-                placeholder="Ej: +56912345678"
-                value={editingEmployee.phoneNumber}
-                onChange={(e) =>
-                  setEditingEmployee({
-                    ...editingEmployee,
-                    phoneNumber: e.currentTarget.value,
-                  })
-                }
-              />
+          <TextInput
+            label="Número de teléfono"
+            withAsterisk
+            placeholder="Ej: +56912345678"
+            value={editingEmployee.phoneNumber}
+            onChange={(e) =>
+              setEditingEmployee({
+                ...editingEmployee,
+                phoneNumber: e.currentTarget.value,
+              })
+            }
+          />
 
-              <TextInput
-                label="Correo electrónico"
-                withAsterisk
-                type="email"
-                placeholder="correo@ejemplo.com"
-                value={editingEmployee.email}
-                onChange={(e) =>
-                  setEditingEmployee({
-                    ...editingEmployee,
-                    email: e.currentTarget.value,
-                  })
-                }
-              />
+          <TextInput
+            label="Correo electrónico"
+            withAsterisk
+            type="email"
+            placeholder="correo@ejemplo.com"
+            value={editingEmployee.email}
+            onChange={(e) =>
+              setEditingEmployee({
+                ...editingEmployee,
+                email: e.currentTarget.value,
+              })
+            }
+          />
 
-              <TextInput
-                label="Contraseña"
-                withAsterisk
-                type={showPassword ? "text" : "password"}
-                placeholder="••••••••"
-                value={editingEmployee.password}
-                onChange={(e) =>
-                  setEditingEmployee({
-                    ...editingEmployee,
-                    password: e.currentTarget.value,
-                  })
-                }
-                rightSection={
-                  <ActionIcon
-                    variant="transparent"
-                    onClick={() => setShowPassword((prev) => !prev)}
-                  >
-                    {showPassword ? (
-                      <IoEyeOff size={16} />
-                    ) : (
-                      <FaEye size={16} />
-                    )}
-                  </ActionIcon>
-                }
-              />
+          <TextInput
+            label="Contraseña"
+            withAsterisk
+            type={showPassword ? "text" : "password"}
+            placeholder={employee ? "Dejar vacío para no cambiar" : "••••••••"}
+            value={editingEmployee.password}
+            onChange={(e) =>
+              setEditingEmployee({
+                ...editingEmployee,
+                password: e.currentTarget.value,
+              })
+            }
+            description={employee ? "Solo completar si deseas cambiar la contraseña" : undefined}
+            rightSection={
+              <ActionIcon
+                variant="transparent"
+                onClick={() => setShowPassword((prev) => !prev)}
+              >
+                {showPassword ? (
+                  <IoEyeOff size={16} />
+                ) : (
+                  <FaEye size={16} />
+                )}
+              </ActionIcon>
+            }
+          />
 
-              <ColorInput
-                label="Color identificador"
-                placeholder="Selecciona un color"
-                value={editingEmployee.color || ""}
-                onChange={(newColor) => {
-                  setEditingEmployee({
-                    ...editingEmployee,
-                    color: newColor,
-                  });
-                }}
-                format="hex"
-                withPicker
-                swatches={[
-                  "#FFB6C1",
-                  "#FFD700",
-                  "#98FB98",
-                  "#AFEEEE",
-                  "#7B68EE",
-                  "#FF69B4",
-                  "#FFA07A",
-                  "#E6E6FA",
-                  "#FFFACD",
-                  "#C0C0C0",
-                ]}
-                swatchesPerRow={5}
-              />
+          <ColorInput
+            label="Color identificador"
+            placeholder="Selecciona un color"
+            value={editingEmployee.color || ""}
+            onChange={(newColor) => {
+              setEditingEmployee({
+                ...editingEmployee,
+                color: newColor,
+              });
+            }}
+            format="hex"
+            withPicker
+            swatches={[
+              "#FFB6C1",
+              "#FFD700",
+              "#98FB98",
+              "#AFEEEE",
+              "#7B68EE",
+              "#FF69B4",
+              "#FFA07A",
+              "#E6E6FA",
+              "#FFFACD",
+              "#C0C0C0",
+            ]}
+            swatchesPerRow={5}
+          />
 
-              <TextInput
-                label="% de Comisión"
-                placeholder="Ej: 30"
-                description="Porcentaje de comisión sobre ventas (0-100)"
-                type="number"
-                min={0}
-                max={100}
-                value={editingEmployee.commissionPercentage ?? 0}
-                onChange={(e) => {
-                  const value = parseFloat(e.currentTarget.value) || 0;
-                  setEditingEmployee({
-                    ...editingEmployee,
-                    commissionPercentage: Math.min(100, Math.max(0, value)),
-                  });
-                }}
-              />
-            </Stack>
-          </Grid.Col>
-
-          {/* Columna derecha - Servicios e imagen */}
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <Stack gap="md">
-              {/* Servicios */}
-              <Box>
-                <Text size="sm" fw={500} mb="xs">
-                  Servicios <span style={{ color: "red" }}>*</span>
-                </Text>
-                <Paper withBorder p="md">
-                  {services.length === 0 ? (
-                    <Text size="sm" c="dimmed" ta="center">
-                      No hay servicios disponibles
+          {/* Imagen de perfil */}
+          <Box>
+            <Text size="sm" fw={500} mb="xs">
+              Imagen de perfil
+            </Text>
+            <Dropzone
+              onDrop={handleDrop}
+              accept={IMAGE_MIME_TYPE}
+              multiple={false}
+              loading={isUploading}
+              style={{
+                border: "2px dashed #ced4da",
+                borderRadius: "8px",
+                cursor: isUploading ? "not-allowed" : "pointer",
+                minHeight: editingEmployee.profileImage ? "auto" : "120px",
+              }}
+            >
+              <Group justify="center" p="md">
+                {isUploading ? (
+                  <Stack align="center" gap="xs">
+                    <Loader size="md" />
+                    <Text size="sm" c="dimmed">
+                      Subiendo imagen...
                     </Text>
-                  ) : (
-                    <ScrollArea.Autosize mah={isMobile ? 200 : 300}>
-                      <Stack gap="xs">
-                        {services.map((service) => (
-                          <Checkbox
-                            key={service._id}
-                            label={service.name}
-                            checked={editingEmployee.services?.some(
-                              (srv) => srv._id === service._id
-                            ) ?? false}
-                            onChange={() => handleServiceToggle(service._id)}
-                          />
-                        ))}
-                      </Stack>
-                    </ScrollArea.Autosize>
-                  )}
-                </Paper>
-              </Box>
-
-              {/* Imagen de perfil */}
-              <Box>
-                <Text size="sm" fw={500} mb="xs">
-                  Imagen de perfil
-                </Text>
-                <Dropzone
-                  onDrop={handleDrop}
-                  accept={IMAGE_MIME_TYPE}
-                  multiple={false}
-                  loading={isUploading}
-                  style={{
-                    border: "2px dashed #ced4da",
-                    borderRadius: "8px",
-                    cursor: isUploading ? "not-allowed" : "pointer",
-                    minHeight: editingEmployee.profileImage ? "auto" : "120px",
-                  }}
-                >
-                  <Group justify="center" p="md">
-                    {isUploading ? (
-                      <Stack align="center" gap="xs">
-                        <Loader size="md" />
-                        <Text size="sm" c="dimmed">
-                          Subiendo imagen...
-                        </Text>
-                      </Stack>
-                    ) : editingEmployee.profileImage ? (
-                      <Box pos="relative">
-                        <Image
-                          src={editingEmployee.profileImage}
-                          alt="Imagen de perfil"
-                          width={100}
-                          height={100}
-                          radius="md"
-                        />
-                        <ActionIcon
-                          style={{
-                            position: "absolute",
-                            top: -8,
-                            right: -8,
-                          }}
-                          variant="filled"
-                          radius="xl"
-                          size="sm"
-                          color="red"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleRemoveImage();
-                          }}
-                        >
-                          <BiSolidXCircle />
-                        </ActionIcon>
-                      </Box>
-                    ) : (
-                      <Stack align="center" gap="xs">
-                        <BiImageAdd size={40} color="#228be6" />
-                        <Text size="sm" ta="center">
-                          Arrastra una imagen o haz clic
-                        </Text>
-                      </Stack>
-                    )}
-                  </Group>
-                </Dropzone>
-              </Box>
-            </Stack>
-          </Grid.Col>
-        </Grid>
+                  </Stack>
+                ) : editingEmployee.profileImage ? (
+                  <Box pos="relative">
+                    <Image
+                      src={editingEmployee.profileImage}
+                      alt="Imagen de perfil"
+                      width={100}
+                      height={100}
+                      radius="md"
+                    />
+                    <ActionIcon
+                      style={{
+                        position: "absolute",
+                        top: -8,
+                        right: -8,
+                      }}
+                      variant="filled"
+                      radius="xl"
+                      size="sm"
+                      color="red"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveImage();
+                      }}
+                    >
+                      <BiSolidXCircle />
+                    </ActionIcon>
+                  </Box>
+                ) : (
+                  <Stack align="center" gap="xs">
+                    <BiImageAdd size={40} color="#228be6" />
+                    <Text size="sm" ta="center">
+                      Arrastra una imagen o haz clic
+                    </Text>
+                  </Stack>
+                )}
+              </Group>
+            </Dropzone>
+          </Box>
+        </Stack>
 
         {/* Footer con botones */}
         <Flex justify="end" gap="sm" mt="xl">

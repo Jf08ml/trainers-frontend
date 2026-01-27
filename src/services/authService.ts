@@ -8,6 +8,8 @@ interface LoginResponse {
   token: string;
   userType: string;
   userPermissions: string[];
+  name?: string;
+  email?: string;
 }
 
 // Función para iniciar sesión

@@ -1,0 +1,49 @@
+import React from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../app/store";
+import { Group, Text, Badge, Avatar } from "@mantine/core";
+import { IoPersonCircle } from "react-icons/io5";
+
+export const UserInfoDisplay: React.FC = () => {
+  const { isAuthenticated, userName, userEmail, role } = useSelector(
+    (state: RootState) => state.auth
+  );
+
+  if (!isAuthenticated || !userName) {
+    return null;
+  }
+
+  const roleLabel = {
+    admin: "Administrador",
+    employee: "Empleado",
+    client: "Cliente",
+  }[role] || role;
+
+  const roleColor = {
+    admin: "red",
+    employee: "blue",
+    client: "green",
+  }[role] || "gray";
+
+  return (
+    <Group gap="xs" wrap="nowrap" style={{ alignItems: "center" }}>
+      <Avatar
+        icon={<IoPersonCircle />}
+        size="md"
+        radius="xl"
+        color={roleColor}
+        style={{ flexShrink: 0 }}
+      />
+      <div style={{ minWidth: 0, flex: 1 }}>
+        <Text size="sm" fw={600} truncate style={{ whiteSpace: "nowrap" }}>
+          {userName}
+        </Text>
+        <Badge size="xs" color={roleColor} variant="light">
+          {roleLabel}
+        </Badge>
+      </div>
+    </Group>
+  );
+};
+
+export default UserInfoDisplay;

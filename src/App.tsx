@@ -9,7 +9,11 @@ import {
   Anchor,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
 import "./App.css";
 import Header from "./layouts/Header";
@@ -20,7 +24,7 @@ import useAuthInitializer from "./hooks/useAuthInitializer";
 import { useServiceWorkerUpdate } from "./hooks/useServiceWorkerUpdate";
 import { useSelector } from "react-redux";
 import { RootState } from "./app/store";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { CustomLoader } from "./components/customLoader/CustomLoader";
 import { createSubscription } from "./services/subscriptionService";
 
@@ -31,9 +35,7 @@ import NotificationsMenu from "./layouts/NotificationsMenu";
 // Función para convertir la clave VAPID de base64url a Uint8Array
 const urlBase64ToUint8Array = (base64String: string): Uint8Array => {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding)
-    .replace(/-/g, "+")
-    .replace(/_/g, "/");
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
 
   const rawData = window.atob(base64);
   const outputArray = new Uint8Array(rawData.length);
@@ -45,25 +47,29 @@ const urlBase64ToUint8Array = (base64String: string): Uint8Array => {
 };
 
 function AppContent() {
-  const navigate = useNavigate();
-  const location = useLocation();
+  // const location = useLocation();
   const { userId, isAuthenticated } = useSelector(
-    (state: RootState) => state.auth
+    (state: RootState) => state.auth,
   );
   const organization = useSelector(
-    (state: RootState) => state.organization.organization
+    (state: RootState) => state.organization.organization,
   );
   const loading = useSelector((state: RootState) => state.organization.loading);
   const [opened, { toggle, close }] = useDisclosure(false);
   const [paymentModalOpened, setPaymentModalOpened] = useState(false);
   const [currentMembership, setCurrentMembership] = useState<Membership | null>(
-    null
+    null,
   );
-  const hasRedirected = useRef(false);
 
   // Branding dinámico
   const color = organization?.branding?.primaryColor || "#DE739E";
   const logoUrl = organization?.branding?.logoUrl || "/logo-default.png";
+
+  // Detectar si estamos en una ruta protegida (admin, employee, client)
+  // const isProtectedRoute =
+  //   location.pathname.startsWith("/admin") ||
+  //   location.pathname.startsWith("/employee") ||
+  //   location.pathname.startsWith("/client");
 
   // Inicializa autenticación en el cliente
   useAuthInitializer();
@@ -79,12 +85,12 @@ function AppContent() {
   }, [currentVersion]);
 
   // Redirigir a agenda en carga inicial si está autenticado
-  useEffect(() => {
-    if (isAuthenticated && location.pathname === "/" && !hasRedirected.current) {
-      hasRedirected.current = true;
-      navigate("/gestionar-agenda", { replace: true });
-    }
-  }, [isAuthenticated, location.pathname, navigate]);
+  // useEffect(() => {
+  //   if (isAuthenticated && location.pathname === "/" && !hasRedirected.current) {
+  //     hasRedirected.current = true;
+  //     navigate("/gestionar-agenda", { replace: true });
+  //   }
+  // }, [isAuthenticated, location.pathname, navigate]);
 
   // Cargar membresía actual
   useEffect(() => {
@@ -114,7 +120,7 @@ function AppContent() {
     return () => {
       window.removeEventListener(
         "membership-suspended",
-        handleMembershipSuspended
+        handleMembershipSuspended,
       );
     };
   }, []);
@@ -145,7 +151,7 @@ function AppContent() {
       if (permission !== "granted") return;
 
       const registration = await navigator.serviceWorker.ready;
-      
+
       // Convertir la clave VAPID a Uint8Array
       const vapidKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;
       if (!vapidKey) {
@@ -153,7 +159,9 @@ function AppContent() {
         return;
       }
 
-      const applicationServerKey = urlBase64ToUint8Array(vapidKey);
+      const applicationServerKey = urlBase64ToUint8Array(
+        vapidKey,
+      ) as BufferSource;
 
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
