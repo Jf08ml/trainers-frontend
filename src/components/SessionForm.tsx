@@ -951,7 +951,6 @@ const SessionForm: React.FC<SessionFormProps> = ({
                         </Text>
                       )}
                     </div>
-                    <Badge>{exercise.difficulty}</Badge>
                   </Group>
                 </Card>
               ))}

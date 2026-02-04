@@ -256,19 +256,6 @@ const ClientTrainingPlan: React.FC = () => {
     }
   };
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case "principiante":
-        return "green";
-      case "intermedio":
-        return "yellow";
-      case "avanzado":
-        return "red";
-      default:
-        return "gray";
-    }
-  };
-
   const renderStrengthConfig = (config: StrengthConfig) => {
     return (
       <Stack gap={4}>
@@ -713,15 +700,6 @@ const ClientTrainingPlan: React.FC = () => {
                             >
                               {exerciseData?.name || "Ejercicio"}
                             </Text>
-                            {exerciseData?.difficulty && (
-                              <Badge
-                                size="xs"
-                                variant="light"
-                                color={getDifficultyColor(exerciseData.difficulty)}
-                              >
-                                {exerciseData.difficulty}
-                              </Badge>
-                            )}
                           </div>
                         </Group>
                       </Accordion.Control>

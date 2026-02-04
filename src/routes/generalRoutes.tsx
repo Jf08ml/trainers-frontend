@@ -33,6 +33,12 @@ import ClientTrainingPlan from "../pages/client/ClientTrainingPlan";
 import FormTemplates from "../pages/admin/FormTemplates";
 import FormBuilder from "../pages/admin/FormBuilder";
 import ClientForms from "../pages/client/ClientForms";
+import ManageDishes from "../pages/admin/manageNutrition/ManageDishes";
+import NutritionPlans from "../pages/admin/NutritionPlans";
+import ClientNutritionPlans from "../pages/admin/ClientNutritionPlans";
+import NutritionPlanBuilder from "../pages/admin/NutritionPlanBuilder";
+import ClientNutritionPlan from "../pages/client/ClientNutritionPlan";
+import ClientDishCatalog from "../pages/client/ClientDishCatalog";
 
 const generalRoutes = [
   // ==================== RUTAS PÚBLICAS ====================
@@ -343,6 +349,66 @@ const generalRoutes = [
     },
   },
   {
+    path: "/admin/dishes",
+    component: () => (
+      <ProtectedRoute>
+        <ManageDishes />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Gestión de Platos",
+      description: "Administra el catálogo de platos",
+    },
+  },
+  {
+    path: "/admin/nutrition-plans",
+    component: () => (
+      <ProtectedRoute>
+        <NutritionPlans />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Planes Nutricionales",
+      description: "Gestiona planes de alimentación para clientes",
+    },
+  },
+  {
+    path: "/admin/nutrition-plans/client/:clientId",
+    component: () => (
+      <ProtectedRoute>
+        <ClientNutritionPlans />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Planes del Cliente",
+      description: "Gestiona los planes nutricionales de un cliente",
+    },
+  },
+  {
+    path: "/admin/nutrition-plans/new",
+    component: () => (
+      <ProtectedRoute>
+        <NutritionPlanBuilder />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Nuevo Plan Nutricional",
+      description: "Crea un nuevo plan de alimentación",
+    },
+  },
+  {
+    path: "/admin/nutrition-plans/edit/:id",
+    component: () => (
+      <ProtectedRoute>
+        <NutritionPlanBuilder />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Editar Plan Nutricional",
+      description: "Edita un plan de alimentación existente",
+    },
+  },
+  {
     path: "/admin/my-membership",
     component: () => (
       <ProtectedRoute>
@@ -554,6 +620,66 @@ const generalRoutes = [
       description: "Gestión de catálogos.",
     },
   },
+  {
+    path: "/employee/dishes",
+    component: () => (
+      <ProtectedRoute>
+        <ManageDishes />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Gestión de Platos",
+      description: "Gestión del catálogo de platos.",
+    },
+  },
+  {
+    path: "/employee/nutrition-plans",
+    component: () => (
+      <ProtectedRoute>
+        <NutritionPlans />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Planes Nutricionales",
+      description: "Gestión de planes nutricionales.",
+    },
+  },
+  {
+    path: "/employee/nutrition-plans/client/:clientId",
+    component: () => (
+      <ProtectedRoute>
+        <ClientNutritionPlans />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Planes del Cliente",
+      description: "Planes nutricionales del cliente.",
+    },
+  },
+  {
+    path: "/employee/nutrition-plans/new",
+    component: () => (
+      <ProtectedRoute>
+        <NutritionPlanBuilder />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Nuevo Plan Nutricional",
+      description: "Crea un nuevo plan nutricional.",
+    },
+  },
+  {
+    path: "/employee/nutrition-plans/edit/:id",
+    component: () => (
+      <ProtectedRoute>
+        <NutritionPlanBuilder />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Editar Plan Nutricional",
+      description: "Edita un plan nutricional.",
+    },
+  },
 
   // ==================== RUTAS CLIENT ====================
   {
@@ -590,6 +716,30 @@ const generalRoutes = [
     MediaMetadata: {
       title: "Mi Entrenamiento",
       description: "Tu plan de entrenamiento semanal.",
+    },
+  },
+  {
+    path: "/client/mi-nutricion",
+    component: () => (
+      <ProtectedRoute>
+        <ClientNutritionPlan />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Mi Nutrición",
+      description: "Tu plan de alimentación personalizado.",
+    },
+  },
+  {
+    path: "/client/catalogo",
+    component: () => (
+      <ProtectedRoute>
+        <ClientDishCatalog />
+      </ProtectedRoute>
+    ),
+    MediaMetadata: {
+      title: "Catálogo de Platos",
+      description: "Explora todos los platos disponibles con su información nutricional.",
     },
   },
   {

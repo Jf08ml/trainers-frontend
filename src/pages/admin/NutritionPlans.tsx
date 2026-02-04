@@ -24,37 +24,39 @@ import {
   IconSearch,
   IconUsers,
   IconChevronRight,
-  IconCalendarEvent,
+  IconSalad,
 } from "@tabler/icons-react";
-import { getWeeklyPlansByOrganizationId, type WeeklyPlan } from "../../services/weeklyPlanService";
-import { getClientsByOrganizationId, type Client } from "../../services/clientService";
+import {
+  getNutritionPlansByOrganizationId,
+  type NutritionPlan,
+} from "../../services/nutritionPlanService";
+import {
+  getClientsByOrganizationId,
+  type Client,
+} from "../../services/clientService";
 
 interface ClientWithPlans extends Client {
   plansCount: number;
   activePlansCount: number;
-  hasCurrentPlan: boolean;
 }
 
-const WeeklyPlans: React.FC = () => {
+const NutritionPlans: React.FC = () => {
   const navigate = useNavigate();
   const organizationId = useSelector(
     (state: RootState) => state.organization.organization?._id
   );
 
-  // Clients state
   const [clientsWithPlans, setClientsWithPlans] = useState<ClientWithPlans[]>([]);
   const [filteredClients, setFilteredClients] = useState<ClientWithPlans[]>([]);
   const [clientSearch, setClientSearch] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Load clients and plans on mount
   useEffect(() => {
     if (organizationId) {
       loadData();
     }
   }, [organizationId]);
 
-  // Filter clients when search changes
   useEffect(() => {
     if (clientSearch.trim() === "") {
       setFilteredClients(clientsWithPlans);
@@ -77,44 +79,33 @@ const WeeklyPlans: React.FC = () => {
 
     const [clients, plans] = await Promise.all([
       getClientsByOrganizationId(organizationId),
-      getWeeklyPlansByOrganizationId(organizationId),
+      getNutritionPlansByOrganizationId(organizationId),
     ]);
 
-    // Create a map of client plans
-    const clientPlansMap = new Map<string, WeeklyPlan[]>();
+    const clientPlansMap = new Map<string, NutritionPlan[]>();
     plans.forEach((plan) => {
-      const clientId = typeof plan.clientId === "object" ? plan.clientId._id : plan.clientId;
+      const clientId =
+        typeof plan.clientId === "object" ? plan.clientId._id : plan.clientId;
       if (!clientPlansMap.has(clientId)) {
         clientPlansMap.set(clientId, []);
       }
       clientPlansMap.get(clientId)!.push(plan);
     });
 
-    // Enrich clients with plan info
     const enrichedClients: ClientWithPlans[] = clients.map((client) => {
       const clientPlans = clientPlansMap.get(client._id) || [];
-      const now = new Date();
-
       const activePlans = clientPlans.filter((p) => p.isActive);
-      const hasCurrentPlan = clientPlans.some((p) => {
-        const start = new Date(p.startDate);
-        const end = new Date(p.endDate);
-        return p.isActive && now >= start && now <= end;
-      });
 
       return {
         ...client,
         plansCount: clientPlans.length,
         activePlansCount: activePlans.length,
-        hasCurrentPlan,
       };
     });
 
-    // Sort: clients with current plans first, then by name
     enrichedClients.sort((a, b) => {
-      if (a.hasCurrentPlan && !b.hasCurrentPlan) return -1;
-      if (!a.hasCurrentPlan && b.hasCurrentPlan) return 1;
-      if (a.activePlansCount !== b.activePlansCount) return b.activePlansCount - a.activePlansCount;
+      if (a.activePlansCount !== b.activePlansCount)
+        return b.activePlansCount - a.activePlansCount;
       return a.name.localeCompare(b.name);
     });
 
@@ -133,7 +124,7 @@ const WeeklyPlans: React.FC = () => {
   };
 
   const handleClientClick = (clientId: string) => {
-    navigate(`/admin/weekly-plans/client/${clientId}`);
+    navigate(`/admin/nutrition-plans/client/${clientId}`);
   };
 
   return (
@@ -142,14 +133,14 @@ const WeeklyPlans: React.FC = () => {
         {/* Header */}
         <Group justify="space-between">
           <div>
-            <Title order={2}>Programación de Entrenamiento</Title>
+            <Title order={2}>Planes Nutricionales</Title>
             <Text c="dimmed" size="sm">
-              Selecciona un cliente para gestionar sus planes de entrenamiento
+              Selecciona un cliente para gestionar sus planes de alimentación
             </Text>
           </div>
           <Button
             leftSection={<IconPlus size={16} />}
-            onClick={() => navigate("/admin/weekly-plans/new")}
+            onClick={() => navigate("/admin/nutrition-plans/new")}
           >
             Nuevo Plan
           </Button>
@@ -212,7 +203,7 @@ const WeeklyPlans: React.FC = () => {
                     <Avatar
                       size="md"
                       radius="xl"
-                      color={client.hasCurrentPlan ? "blue" : "gray"}
+                      color={client.activePlansCount > 0 ? "teal" : "gray"}
                     >
                       {getClientInitials(client.name)}
                     </Avatar>
@@ -226,17 +217,18 @@ const WeeklyPlans: React.FC = () => {
                     </div>
                   </Group>
                   <Group gap="xs" wrap="nowrap">
-                    {client.hasCurrentPlan ? (
-                      <Badge size="sm" color="blue" variant="light">
+                    {client.activePlansCount > 0 ? (
+                      <Badge size="sm" color="teal" variant="light">
                         Activo
                       </Badge>
                     ) : client.plansCount > 0 ? (
                       <Badge size="sm" color="gray" variant="light">
-                        {client.plansCount} plan{client.plansCount !== 1 ? "es" : ""}
+                        {client.plansCount} plan
+                        {client.plansCount !== 1 ? "es" : ""}
                       </Badge>
                     ) : (
                       <ThemeIcon size="sm" variant="light" color="gray">
-                        <IconCalendarEvent size={12} />
+                        <IconSalad size={12} />
                       </ThemeIcon>
                     )}
                     <IconChevronRight size={16} color="gray" />
@@ -251,4 +243,4 @@ const WeeklyPlans: React.FC = () => {
   );
 };
 
-export default WeeklyPlans;
+export default NutritionPlans;

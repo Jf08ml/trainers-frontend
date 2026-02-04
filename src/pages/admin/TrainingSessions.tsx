@@ -100,7 +100,7 @@ const TrainingSessions: React.FC = () => {
       <Stack gap="lg">
         <Group justify="space-between">
           <div>
-            <Title order={2}>Sesiones de Entrenamiento</Title>
+            <Title order={2}>Plantillas de Entrenamiento</Title>
             <Text c="dimmed" size="sm">
               Crea y gestiona plantillas de sesiones reutilizables
             </Text>

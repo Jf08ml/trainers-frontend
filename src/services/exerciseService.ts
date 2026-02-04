@@ -7,7 +7,6 @@ export interface Exercise {
   name: string;
   description?: string;
   muscleGroups: any[]; // Can be string[] or populated MuscleGroup[]
-  difficulty: "principiante" | "intermedio" | "avanzado";
   equipment: any[]; // Can be string[] or populated Equipment[]
   videoUrl?: string;
   imageUrl?: string;
@@ -20,7 +19,6 @@ export interface CreateExercisePayload {
   name: string;
   description?: string;
   muscleGroups: string[];
-  difficulty: "principiante" | "intermedio" | "avanzado";
   equipment: string[];
   videoUrl?: string;
   imageUrl?: string;

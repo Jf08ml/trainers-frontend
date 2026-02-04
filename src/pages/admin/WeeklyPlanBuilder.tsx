@@ -25,7 +25,7 @@ import {
 import { DatePickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { IconPlus, IconTrash, IconAlertCircle } from "@tabler/icons-react";
+import { IconPlus, IconTrash, IconAlertCircle, IconEdit } from "@tabler/icons-react";
 import {
   getWeeklyPlanById,
   createWeeklyPlan,
@@ -80,6 +80,7 @@ const WeeklyPlanBuilder: React.FC = () => {
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [selectedSession, setSelectedSession] = useState<string>("");
   const [creationMode, setCreationMode] = useState<"template" | "create">("template");
+  const [editingSessionId, setEditingSessionId] = useState<string | undefined>(undefined);
 
   // Form
   const planForm = useForm({
@@ -248,6 +249,21 @@ const WeeklyPlanBuilder: React.FC = () => {
     setSelectedDay(null);
     setSelectedSession("");
     setCreationMode("template");
+  };
+
+  const handleEditSession = (sessionId: string) => {
+    setEditingSessionId(sessionId);
+    setSessionBuilderModal(true);
+  };
+
+  const handleSessionUpdated = (sessionId: string, sessionName: string) => {
+    setDayAssignments(
+      dayAssignments.map((d) =>
+        d.sessionId === sessionId ? { ...d, sessionName } : d
+      )
+    );
+    setEditingSessionId(undefined);
+    loadData();
   };
 
   const handleRemoveDay = (dayOfWeek: number) => {
@@ -457,13 +473,21 @@ const WeeklyPlanBuilder: React.FC = () => {
                         </Badge>
                         <Text fw={500}>{day.sessionName}</Text>
                       </Group>
-                      <ActionIcon
-                        color="red"
-                        variant="subtle"
-                        onClick={() => handleRemoveDay(day.dayOfWeek)}
-                      >
-                        <IconTrash size={16} />
-                      </ActionIcon>
+                      <Group gap={4}>
+                        <ActionIcon
+                          variant="subtle"
+                          onClick={() => handleEditSession(day.sessionId)}
+                        >
+                          <IconEdit size={16} />
+                        </ActionIcon>
+                        <ActionIcon
+                          color="red"
+                          variant="subtle"
+                          onClick={() => handleRemoveDay(day.dayOfWeek)}
+                        >
+                          <IconTrash size={16} />
+                        </ActionIcon>
+                      </Group>
                     </Group>
                     <Textarea
                       placeholder="Notas para este día (opcional)..."
@@ -557,8 +581,12 @@ const WeeklyPlanBuilder: React.FC = () => {
       {/* Session Builder Modal */}
       <SessionBuilderModal
         opened={sessionBuilderModal}
-        onClose={() => setSessionBuilderModal(false)}
-        onSessionCreated={handleSessionCreated}
+        onClose={() => {
+          setSessionBuilderModal(false);
+          setEditingSessionId(undefined);
+        }}
+        onSessionCreated={editingSessionId ? handleSessionUpdated : handleSessionCreated}
+        sessionId={editingSessionId}
       />
     </Container>
   );

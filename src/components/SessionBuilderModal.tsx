@@ -6,15 +6,19 @@ interface SessionBuilderModalProps {
   opened: boolean;
   onClose: () => void;
   onSessionCreated: (sessionId: string, sessionName: string) => void;
+  sessionId?: string;
 }
 
 const SessionBuilderModal: React.FC<SessionBuilderModalProps> = ({
   opened,
   onClose,
   onSessionCreated,
+  sessionId,
 }) => {
-  const handleSave = (sessionId: string, sessionName: string) => {
-    onSessionCreated(sessionId, sessionName);
+  const isEditing = !!sessionId;
+
+  const handleSave = (savedSessionId: string, sessionName: string) => {
+    onSessionCreated(savedSessionId, sessionName);
     onClose();
   };
 
@@ -22,7 +26,7 @@ const SessionBuilderModal: React.FC<SessionBuilderModalProps> = ({
     <Modal
       opened={opened}
       onClose={onClose}
-      title="Crear Sesión Personalizada"
+      title={isEditing ? "Editar Sesión" : "Crear Sesión Personalizada"}
       size="xl"
       centered
       styles={{
@@ -33,11 +37,12 @@ const SessionBuilderModal: React.FC<SessionBuilderModalProps> = ({
       }}
     >
       <SessionForm
+        sessionId={sessionId}
         onSave={handleSave}
         onCancel={onClose}
         showCancelButton={true}
         cancelButtonLabel="Cancelar"
-        saveButtonLabel="Crear Sesión"
+        saveButtonLabel={isEditing ? "Guardar Cambios" : "Crear Sesión"}
       />
     </Modal>
   );

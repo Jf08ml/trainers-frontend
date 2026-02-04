@@ -3,7 +3,6 @@ import {
   Stack,
   TextInput,
   Textarea,
-  Select,
   MultiSelect,
   Button,
   Group,
@@ -36,12 +35,6 @@ interface ExerciseFormModalProps {
   exercise: Exercise | null;
 }
 
-const DIFFICULTY_OPTIONS = [
-  { value: "principiante", label: "Principiante" },
-  { value: "intermedio", label: "Intermedio" },
-  { value: "avanzado", label: "Avanzado" },
-];
-
 const ExerciseFormModal: React.FC<ExerciseFormModalProps> = ({
   opened,
   onClose,
@@ -52,7 +45,6 @@ const ExerciseFormModal: React.FC<ExerciseFormModalProps> = ({
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [muscleGroups, setMuscleGroups] = useState<string[]>([]);
-  const [difficulty, setDifficulty] = useState<string>("intermedio");
   const [equipment, setEquipment] = useState<string[]>([]);
   const [videoUrl, setVideoUrl] = useState("");
   const [imageUrl, setImageUrl] = useState("");
@@ -91,7 +83,6 @@ const ExerciseFormModal: React.FC<ExerciseFormModalProps> = ({
     setName("");
     setDescription("");
     setMuscleGroups([]);
-    setDifficulty("intermedio");
     setEquipment([]);
     setVideoUrl("");
     setImageUrl("");
@@ -111,7 +102,6 @@ const ExerciseFormModal: React.FC<ExerciseFormModalProps> = ({
         : [];
       setMuscleGroups(mgIds);
       setEquipment(eqIds);
-      setDifficulty(exercise.difficulty ?? "intermedio");
       setVideoUrl(exercise.videoUrl?.trim() ?? "");
       setImageUrl(exercise.imageUrl?.trim() ?? "");
     } else if (opened) {
@@ -146,7 +136,6 @@ const ExerciseFormModal: React.FC<ExerciseFormModalProps> = ({
         name: name.trim(),
         description: description.trim(),
         muscleGroups,
-        difficulty: difficulty as "principiante" | "intermedio" | "avanzado",
         equipment,
         videoUrl: videoUrl.trim(),
         imageUrl: imageUrl.trim(),
@@ -232,7 +221,7 @@ const ExerciseFormModal: React.FC<ExerciseFormModalProps> = ({
           <Text fw={600} mb={6}>
             Detalles del ejercicio
           </Text>
-          <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
+          <SimpleGrid cols={{ base: 1 }} spacing="md">
             <MultiSelect
               label="Grupos musculares"
               placeholder="Selecciona..."
@@ -249,16 +238,6 @@ const ExerciseFormModal: React.FC<ExerciseFormModalProps> = ({
                   : undefined
               }
             />
-            <Select
-              label="Dificultad"
-              placeholder="Selecciona dificultad"
-              data={DIFFICULTY_OPTIONS}
-              value={difficulty}
-              onChange={(value) => setDifficulty(value || "intermedio")}
-            />
-          </SimpleGrid>
-
-          <Box mt="md">
             <MultiSelect
               label="Equipamiento"
               placeholder="Selecciona..."
@@ -275,7 +254,7 @@ const ExerciseFormModal: React.FC<ExerciseFormModalProps> = ({
                   : undefined
               }
             />
-          </Box>
+          </SimpleGrid>
         </Box>
 
         <Divider />

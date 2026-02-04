@@ -92,7 +92,6 @@ export interface Exercise {
   name: string;
   description?: string;
   muscleGroups: MuscleGroup[];
-  difficulty: "principiante" | "intermedio" | "avanzado";
   equipment: Equipment[];
   videoUrl?: string;
   imageUrl?: string;

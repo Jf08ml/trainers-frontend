@@ -84,6 +84,8 @@ const apiExercise: AxiosInstance = createAxiosInstance(
   `${API_BASE_URL}/exercises`
 );
 const apiTraining: AxiosInstance = createAxiosInstance(API_BASE_URL);
+const apiDish: AxiosInstance = createAxiosInstance(`${API_BASE_URL}/dishes`);
+const apiNutrition: AxiosInstance = createAxiosInstance(API_BASE_URL);
 
 export {
   apiGeneral,
@@ -102,4 +104,6 @@ export {
   apiPayments,
   apiExercise,
   apiTraining,
+  apiDish,
+  apiNutrition,
 };

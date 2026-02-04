@@ -24,19 +24,6 @@ interface ExerciseTableProps {
   error: string | null;
 }
 
-const getDifficultyColor = (difficulty: string) => {
-  switch (difficulty) {
-    case "principiante":
-      return "green";
-    case "intermedio":
-      return "yellow";
-    case "avanzado":
-      return "red";
-    default:
-      return "gray";
-  }
-};
-
 const ExerciseTable: React.FC<ExerciseTableProps> = ({
   exercises,
   handleDeleteExercise,
@@ -115,7 +102,6 @@ const ExerciseTable: React.FC<ExerciseTableProps> = ({
                 <Table.Thead>
                   <Table.Tr>
                     <Table.Th>Nombre</Table.Th>
-                    <Table.Th>Dificultad</Table.Th>
                     <Table.Th>Acciones</Table.Th>
                   </Table.Tr>
                 </Table.Thead>
@@ -129,14 +115,6 @@ const ExerciseTable: React.FC<ExerciseTableProps> = ({
                             {exercise.description}
                           </Text>
                         )}
-                      </Table.Td>
-                      <Table.Td>
-                        <Badge
-                          color={getDifficultyColor(exercise.difficulty)}
-                          variant="filled"
-                        >
-                          {exercise.difficulty}
-                        </Badge>
                       </Table.Td>
                       <Table.Td>
                         <Group gap="xs">
@@ -176,12 +154,6 @@ const ExerciseTable: React.FC<ExerciseTableProps> = ({
                           </Text>
                         )}
                       </Box>
-                      <Badge
-                        color={getDifficultyColor(exercise.difficulty)}
-                        variant="filled"
-                      >
-                        {exercise.difficulty}
-                      </Badge>
                     </Group>
 
                     {exercise.muscleGroups.length > 0 && (

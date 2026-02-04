@@ -18,7 +18,7 @@ import { IoAnalytics } from "react-icons/io5";
 import { FaCrown } from "react-icons/fa";
 import { BsChatText } from "react-icons/bs";
 import { MdCampaign } from "react-icons/md";
-import { IconBarbell, IconRun, IconClipboardList } from "@tabler/icons-react";
+import { IconBarbell, IconRun, IconClipboardList, IconSalad, IconToolsKitchen2 } from "@tabler/icons-react";
 // import { usePermissions } from "../hooks/usePermissions";
 import { useSelector } from "react-redux";
 import { RootState } from "../app/store";
@@ -107,13 +107,13 @@ export default function NavbarLinks({ closeNavbar }: NavbarLinksProps) {
         title: "Entrenamiento",
         items: [
           {
-            label: "Planes Semanales",
+            label: "Programación de Entrenamiento",
             to: "/admin/weekly-plans",
             icon: <IconRun size={18} />,
             canShow: true,
           },
           {
-            label: "Sesiones de Entrenamiento",
+            label: "Plantillas de Entrenamiento",
             to: "/admin/training-sessions",
             icon: <IconBarbell size={18} />,
             canShow: true,
@@ -128,6 +128,23 @@ export default function NavbarLinks({ closeNavbar }: NavbarLinksProps) {
             label: "Formularios de Feedback",
             to: "/admin/form-templates",
             icon: <IconClipboardList size={18} />,
+            canShow: true,
+          },
+        ],
+      },
+      {
+        title: "Nutrición",
+        items: [
+          {
+            label: "Platos",
+            to: "/admin/dishes",
+            icon: <IconToolsKitchen2 size={18} />,
+            canShow: true,
+          },
+          {
+            label: "Planes Nutricionales",
+            to: "/admin/nutrition-plans",
+            icon: <IconSalad size={18} />,
             canShow: true,
           },
         ],
@@ -221,13 +238,13 @@ export default function NavbarLinks({ closeNavbar }: NavbarLinksProps) {
         title: "Entrenamiento",
         items: [
           {
-            label: "Planes Semanales",
+            label: "Programación de Entrenamiento",
             to: "/employee/weekly-plans",
             icon: <IconRun size={18} />,
             canShow: true,
           },
           {
-            label: "Sesiones de Entrenamiento",
+            label: "Plantillas de Entrenamiento",
             to: "/employee/training-sessions",
             icon: <IconBarbell size={18} />,
             canShow: true,
@@ -236,6 +253,23 @@ export default function NavbarLinks({ closeNavbar }: NavbarLinksProps) {
             label: "Catálogos de Entrenamiento",
             to: "/employee/training-catalogs",
             icon: <IconBarbell size={18} />,
+            canShow: true,
+          },
+        ],
+      },
+      {
+        title: "Nutrición",
+        items: [
+          {
+            label: "Platos",
+            to: "/employee/dishes",
+            icon: <IconToolsKitchen2 size={18} />,
+            canShow: true,
+          },
+          {
+            label: "Planes Nutricionales",
+            to: "/employee/nutrition-plans",
+            icon: <IconSalad size={18} />,
             canShow: true,
           },
         ],
@@ -258,6 +292,18 @@ export default function NavbarLinks({ closeNavbar }: NavbarLinksProps) {
             label: "Mi Entrenamiento",
             to: "/client/mi-entrenamiento",
             icon: <IconBarbell size={18} />,
+            canShow: true,
+          },
+          {
+            label: "Mi Nutrición",
+            to: "/client/mi-nutricion",
+            icon: <IconSalad size={18} />,
+            canShow: true,
+          },
+          {
+            label: "Catálogo de Platos",
+            to: "/client/catalogo",
+            icon: <IconToolsKitchen2 size={18} />,
             canShow: true,
           },
           {
